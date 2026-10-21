@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mai'Lafiya General Merchants — UI/UX Prototype</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<link rel="stylesheet" href="variation-1.css" />
+<link rel="stylesheet" href="variation-2.css" />
+
+<style>
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Manrope", system-ui, sans-serif;
+    background: #EEEBE4;
+    color: #0A0F0D;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+
+  /* Utility */
+  .flex { display: flex; }
+  .items-center { align-items: center; }
+  .gap-5 { gap: 20px; }
+  .w-3\.5 { width: 14px; } .h-3\.5 { height: 14px; }
+  .w-4 { width: 16px; } .h-4 { height: 16px; }
+  .w-5 { width: 20px; } .h-5 { height: 20px; }
+  .w-6 { width: 24px; } .h-6 { height: 24px; }
+  .w-8 { width: 32px; } .h-8 { height: 32px; }
+  .inline { display: inline-block; }
+  .mr-1 { margin-right: 4px; }
+  .ml-1 { margin-left: 4px; }
+  .ml-0\.5 { margin-left: 2px; }
+
+  /* Top control bar */
+  .cbar {
+    position: sticky; top: 0; z-index: 100;
+    background: #0A0F0D; color: #F5F3EE;
+    padding: 12px 20px;
+    display: flex; align-items: center; gap: 18px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    flex-wrap: wrap;
+  }
+  .cbar-title {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 13px; font-weight: 700; letter-spacing: 0.1em;
+    color: #C9A24B; text-transform: uppercase;
+    margin-right: auto;
+  }
+  .cbar-title small { display: block; font-size: 10px; color: rgba(245,243,238,0.55); font-weight: 500; letter-spacing: 0.15em; margin-top: 2px; }
+  .cbar-group { display: flex; align-items: center; gap: 6px; }
+  .cbar-label {
+    font-family: "Space Grotesk", sans-serif; font-size: 10px;
+    letter-spacing: 0.15em; color: rgba(245,243,238,0.55); font-weight: 700;
+    margin-right: 4px; text-transform: uppercase;
+  }
+  .cbar-seg {
+    display: inline-flex;
+    background: rgba(245,243,238,0.08);
+    border: 1px solid rgba(245,243,238,0.12);
+    border-radius: 6px; overflow: hidden;
+  }
+  .cbar-seg button {
+    padding: 7px 12px; border: none; background: transparent;
+    color: rgba(245,243,238,0.65); font-family: "Manrope", sans-serif;
+    font-size: 12px; font-weight: 600; cursor: pointer;
+    letter-spacing: 0.02em; white-space: nowrap;
+  }
+  .cbar-seg button.is-active {
+    background: #C9A24B; color: #0A0F0D;
+  }
+  .cbar-seg--v1 button.is-active { background: #B8542C; color: #FBF7F1; }
+  .cbar-select {
+    padding: 7px 10px; border-radius: 6px;
+    background: rgba(245,243,238,0.08); border: 1px solid rgba(245,243,238,0.12);
+    color: #F5F3EE; font-family: inherit; font-size: 12px; font-weight: 600;
+    outline: none; cursor: pointer;
+  }
+
+  /* Frame */
+  .frame-wrap {
+    padding: 24px;
+    min-height: calc(100vh - 68px);
+    background:
+      radial-gradient(circle at 20% 0%, rgba(184,84,44,0.05), transparent 50%),
+      radial-gradient(circle at 80% 100%, rgba(201,162,75,0.05), transparent 50%),
+      #EEEBE4;
+    display: flex; justify-content: center;
+  }
+  .frame-desktop {
+    width: 100%; max-width: 1440px;
+    background: white; border-radius: 12px; overflow: hidden;
+    box-shadow: 0 30px 60px -20px rgba(0,0,0,0.2);
+  }
+  .frame-mobile {
+    width: 390px; min-height: 800px;
+    background: white; border-radius: 40px; overflow: hidden;
+    box-shadow: 0 30px 60px -20px rgba(0,0,0,0.25);
+    border: 10px solid #1a1a1a;
+  }
+  .frame-mobile-notch {
+    height: 30px; background: #1a1a1a;
+    display: flex; justify-content: center; align-items: center; gap: 6px;
+    color: #F5F3EE; font-family: "Manrope", sans-serif;
+    font-size: 12px; font-weight: 600;
+  }
+  .frame-mobile-notch::before, .frame-mobile-notch::after {
+    content: ""; width: 6px; height: 6px; border-radius: 50%; background: #333;
+  }
+  .frame-mobile-content {
+    height: calc(800px - 40px);
+    overflow-y: auto;
+  }
+  .frame-desktop-scroll {
+    max-height: calc(100vh - 130px);
+    overflow-y: auto;
+  }
+
+  /* Rationale strip */
+  .rationale {
+    max-width: 1440px; margin: 0 auto 20px;
+    padding: 20px 28px; background: white;
+    border-radius: 12px;
+    display: grid; grid-template-columns: auto 1fr; gap: 22px;
+    align-items: center;
+    border-left: 4px solid #B8542C;
+  }
+  .rationale.is-v2 { border-left-color: #C9A24B; }
+  .rationale-badge {
+    font-family: "Space Grotesk", sans-serif; font-size: 11px;
+    letter-spacing: 0.15em; font-weight: 700;
+    padding: 6px 12px; border-radius: 4px;
+    background: #B8542C; color: #FBF7F1; text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .rationale.is-v2 .rationale-badge { background: #0A0F0D; color: #C9A24B; }
+  .rationale-title {
+    font-family: "Fraunces", serif; font-size: 20px; font-weight: 500;
+    color: #0A0F0D; margin: 0 0 3px;
+  }
+  .rationale.is-v2 .rationale-title { font-family: "Space Grotesk", sans-serif; letter-spacing: -0.02em; }
+  .rationale-desc {
+    font-size: 13.5px; color: #6C7671; margin: 0; line-height: 1.55; max-width: 900px;
+  }
+
+  /* When mobile view, put both mobile frames side by side */
+  .mobile-stage {
+    display: flex; gap: 32px; justify-content: center; flex-wrap: wrap;
+  }
+</style>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script src="data.js"></script>
+</head>
+
+<body>
+<div id="root"></div>
+
+<script type="text/babel" src="shared-icons.jsx"></script>
+<script type="text/babel" src="variation-1.jsx"></script>
+<script type="text/babel" src="variation-2.jsx"></script>
+
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+const V1_INFO = {
+  badge: "VARIATION 1",
+  title: "Warm & Trust-Led",
+  desc: "Editorial, human, warmly-toned. A clay + deep-green palette with Fraunces serif headings for a personable, community-first feel that lands with the family-owned Nigerian audience. Best for building long-term trust with landlords, tenants, and walk-in enquirers.",
+};
+const V2_INFO = {
+  badge: "VARIATION 2",
+  title: "Modern & Premium",
+  desc: "Sleek, editorial, high-end. Near-black + gold with Space Grotesk display type — a Zillow / Property24-caliber transactional feel. Best for corporate operators, industrial investors, and clients scanning listings efficiently on desktop.",
+};
+
+const PAGES = [
+  { k: "home", label: "Homepage" },
+  { k: "listings", label: "Listings" },
+  { k: "detail", label: "Detail" },
+  { k: "services", label: "Services" },
+  { k: "about", label: "About" },
+  { k: "list-property", label: "List Property" },
+  { k: "contact", label: "Contact" },
+];
+
+function readLS(key, fallback) {
+  try { const v = localStorage.getItem(key); return v == null ? fallback : v; } catch { return fallback; }
+}
+
+function App() {
+  const [variation, setVariation] = useState(readLS("mai-variation", "v1"));
+  const [page, setPage] = useState(readLS("mai-page", "home"));
+  const [device, setDevice] = useState(readLS("mai-device", "desktop"));
+  const [detailId, setDetailId] = useState(readLS("mai-detail", "wh-bompai-001"));
+
+  useEffect(() => { localStorage.setItem("mai-variation", variation); }, [variation]);
+  useEffect(() => { localStorage.setItem("mai-page", page); }, [page]);
+  useEffect(() => { localStorage.setItem("mai-device", device); }, [device]);
+  useEffect(() => { localStorage.setItem("mai-detail", detailId); }, [detailId]);
+
+  useEffect(() => {
+    const el = document.querySelector(".frame-desktop-scroll, .frame-mobile-content");
+    if (el) el.scrollTop = 0;
+  }, [page, variation, device]);
+
+  const info = variation === "v1" ? V1_INFO : V2_INFO;
+  const Root = variation === "v1" ? window.V1Root : window.V2Root;
+
+  return (
+    <>
+      <div className="cbar">
+        <div className="cbar-title">
+          Mai'Lafiya General Merchants
+          <small>UI/UX PROTOTYPE · 2 VARIATIONS</small>
+        </div>
+
+        <div className="cbar-group">
+          <span className="cbar-label">Variation</span>
+          <div className={"cbar-seg " + (variation === "v1" ? "cbar-seg--v1" : "")}>
+            <button className={variation === "v1" ? "is-active" : ""} onClick={() => setVariation("v1")}>V1 · Warm</button>
+            <button className={variation === "v2" ? "is-active" : ""} onClick={() => setVariation("v2")}>V2 · Premium</button>
+          </div>
+        </div>
+
+        <div className="cbar-group">
+          <span className="cbar-label">Page</span>
+          <select className="cbar-select" value={page} onChange={(e) => setPage(e.target.value)}>
+            {PAGES.map((p) => <option key={p.k} value={p.k}>{p.label}</option>)}
+          </select>
+        </div>
+
+        <div className="cbar-group">
+          <span className="cbar-label">Device</span>
+          <div className={"cbar-seg " + (variation === "v1" ? "cbar-seg--v1" : "")}>
+            <button className={device === "desktop" ? "is-active" : ""} onClick={() => setDevice("desktop")}>Desktop</button>
+            <button className={device === "mobile" ? "is-active" : ""} onClick={() => setDevice("mobile")}>Mobile</button>
+            <button className={device === "both" ? "is-active" : ""} onClick={() => setDevice("both")}>Compare</button>
+          </div>
+        </div>
+      </div>
+
+      <div className="frame-wrap">
+        <div style={{ width: "100%", maxWidth: 1440 }}>
+          <div className={"rationale " + (variation === "v2" ? "is-v2" : "")}>
+            <div className="rationale-badge">{info.badge}</div>
+            <div>
+              <div className="rationale-title">{info.title}</div>
+              <p className="rationale-desc">{info.desc}</p>
+            </div>
+          </div>
+
+          {device === "desktop" && (
+            <div className="frame-desktop">
+              <div className="frame-desktop-scroll">
+                <Root page={page} setPage={setPage} detailId={detailId} setDetailId={setDetailId} mobile={false} />
+              </div>
+            </div>
+          )}
+
+          {device === "mobile" && (
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <div className="frame-mobile">
+                <div className="frame-mobile-notch"><span>9:41</span></div>
+                <div className="frame-mobile-content">
+                  <Root page={page} setPage={setPage} detailId={detailId} setDetailId={setDetailId} mobile={true} />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {device === "both" && (
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 420px", gap: 32, alignItems: "start" }}>
+              <div className="frame-desktop">
+                <div className="frame-desktop-scroll">
+                  <Root page={page} setPage={setPage} detailId={detailId} setDetailId={setDetailId} mobile={false} />
+                </div>
+              </div>
+              <div style={{ display: "flex", justifyContent: "center", position: "sticky", top: 84 }}>
+                <div className="frame-mobile">
+                  <div className="frame-mobile-notch"><span>9:41</span></div>
+                  <div className="frame-mobile-content">
+                    <Root page={page} setPage={setPage} detailId={detailId} setDetailId={setDetailId} mobile={true} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </>
+  );
+}
+
+// Wait for all babel scripts to load before rendering
+function tryMount() {
+  if (window.V1Root && window.V2Root && window.Icon && window.MAILAFIYA_DATA) {
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  } else {
+    setTimeout(tryMount, 60);
+  }
+}
+tryMount();
+</script>
+</body>
+</html>

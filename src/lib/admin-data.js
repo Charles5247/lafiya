@@ -1,0 +1,2 @@
+export function csvCell(value){const text=typeof value==='object'?JSON.stringify(value):String(value??'');const safe=/^[=+\-@]/.test(text)?"'"+text:text;return '"'+safe.replaceAll('"','""')+'"'}
+export function jsonValue(value){if(typeof value==='string'){const parsed=JSON.parse(value);if(!Array.isArray(parsed)&&(!parsed||typeof parsed!=='object'))throw Error('JSON must be an array or object');return parsed}return value}
