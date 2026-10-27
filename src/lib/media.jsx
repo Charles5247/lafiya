@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 
-const known = new Set(['logo-mh.png', 'founder-portrait-cropped.jpg']);
-
 export function resolveImage(value) {
   if (!value) return null;
   if (/^https?:\/\//i.test(value)) return value;
   const name = value.replace(/^(\/)?assets\//, '');
-  if (known.has(name)) return `/assets/${name}`;
-  return null;
+  return `/assets/${name}`;
 }
 
 export function Image({ src, alt = '', className = '', ...props }) {

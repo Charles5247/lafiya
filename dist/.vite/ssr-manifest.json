@@ -4,10 +4,10 @@
   "\u0000C:/Users/PC/lafiya/node_modules/prop-types/index.js?commonjs-module": [],
   "\u0000C:/Users/PC/lafiya/node_modules/react-dom/cjs/react-dom.production.min.js?commonjs-exports": [],
   "\u0000C:/Users/PC/lafiya/node_modules/react-dom/client.js?commonjs-es-import": [
-    "/assets/client-Cayhvq8W.js"
+    "/assets/client-3wHRPAqR.js"
   ],
   "\u0000C:/Users/PC/lafiya/node_modules/react-dom/client.js?commonjs-exports": [
-    "/assets/client-Cayhvq8W.js"
+    "/assets/client-3wHRPAqR.js"
   ],
   "\u0000C:/Users/PC/lafiya/node_modules/react-dom/index.js?commonjs-es-import": [],
   "\u0000C:/Users/PC/lafiya/node_modules/react-dom/index.js?commonjs-module": [],
@@ -65,42 +65,102 @@
   "node_modules/@supabase/supabase-js/dist/tracingRegistry.mjs": [],
   "node_modules/iceberg-js/dist/index.mjs": [],
   "node_modules/invariant/browser.js": [],
-  "node_modules/lucide-react/dist/esm/Icon.js": [],
-  "node_modules/lucide-react/dist/esm/createLucideIcon.js": [],
-  "node_modules/lucide-react/dist/esm/defaultAttributes.js": [],
-  "node_modules/lucide-react/dist/esm/icons/arrow-right.js": [],
-  "node_modules/lucide-react/dist/esm/icons/building-2.js": [],
-  "node_modules/lucide-react/dist/esm/icons/check.js": [],
-  "node_modules/lucide-react/dist/esm/icons/chevron-left.js": [],
-  "node_modules/lucide-react/dist/esm/icons/chevron-right.js": [],
-  "node_modules/lucide-react/dist/esm/icons/clock.js": [],
-  "node_modules/lucide-react/dist/esm/icons/grid-3x3.js": [],
-  "node_modules/lucide-react/dist/esm/icons/house.js": [],
-  "node_modules/lucide-react/dist/esm/icons/key.js": [],
-  "node_modules/lucide-react/dist/esm/icons/landmark.js": [],
-  "node_modules/lucide-react/dist/esm/icons/list.js": [],
-  "node_modules/lucide-react/dist/esm/icons/log-out.js": [],
-  "node_modules/lucide-react/dist/esm/icons/mail.js": [],
-  "node_modules/lucide-react/dist/esm/icons/map-pin.js": [],
-  "node_modules/lucide-react/dist/esm/icons/menu.js": [],
-  "node_modules/lucide-react/dist/esm/icons/phone.js": [],
-  "node_modules/lucide-react/dist/esm/icons/play.js": [],
-  "node_modules/lucide-react/dist/esm/icons/search.js": [],
-  "node_modules/lucide-react/dist/esm/icons/settings.js": [],
-  "node_modules/lucide-react/dist/esm/icons/shield-alert.js": [],
-  "node_modules/lucide-react/dist/esm/icons/shield-check.js": [],
-  "node_modules/lucide-react/dist/esm/icons/star.js": [],
-  "node_modules/lucide-react/dist/esm/icons/upload.js": [],
-  "node_modules/lucide-react/dist/esm/icons/user.js": [],
-  "node_modules/lucide-react/dist/esm/icons/warehouse.js": [],
-  "node_modules/lucide-react/dist/esm/icons/x.js": [],
-  "node_modules/lucide-react/dist/esm/shared/src/utils.js": [],
+  "node_modules/lucide-react/dist/esm/Icon.js": [
+    "/assets/x-CMFksBaO.js"
+  ],
+  "node_modules/lucide-react/dist/esm/createLucideIcon.js": [
+    "/assets/x-CMFksBaO.js"
+  ],
+  "node_modules/lucide-react/dist/esm/defaultAttributes.js": [
+    "/assets/x-CMFksBaO.js"
+  ],
+  "node_modules/lucide-react/dist/esm/icons/arrow-right.js": [
+    "/assets/Meta-BGM7a1T8.js"
+  ],
+  "node_modules/lucide-react/dist/esm/icons/building-2.js": [
+    "/assets/Home-mlqL9AXy.js"
+  ],
+  "node_modules/lucide-react/dist/esm/icons/check.js": [
+    "/assets/check-DPor4AQj.js"
+  ],
+  "node_modules/lucide-react/dist/esm/icons/chevron-left.js": [
+    "/assets/chevron-right-BRHEtsb9.js"
+  ],
+  "node_modules/lucide-react/dist/esm/icons/chevron-right.js": [
+    "/assets/chevron-right-BRHEtsb9.js"
+  ],
+  "node_modules/lucide-react/dist/esm/icons/clock.js": [
+    "/assets/Home-mlqL9AXy.js"
+  ],
+  "node_modules/lucide-react/dist/esm/icons/grid-3x3.js": [
+    "/assets/Listings-Dc7EyvJM.js"
+  ],
+  "node_modules/lucide-react/dist/esm/icons/house.js": [
+    "/assets/Home-mlqL9AXy.js"
+  ],
+  "node_modules/lucide-react/dist/esm/icons/key.js": [
+    "/assets/warehouse-DstwXhf6.js"
+  ],
+  "node_modules/lucide-react/dist/esm/icons/landmark.js": [
+    "/assets/Home-mlqL9AXy.js"
+  ],
+  "node_modules/lucide-react/dist/esm/icons/list.js": [
+    "/assets/Listings-Dc7EyvJM.js"
+  ],
+  "node_modules/lucide-react/dist/esm/icons/log-out.js": [
+    "/assets/Admin-PZVpqL4U.js"
+  ],
+  "node_modules/lucide-react/dist/esm/icons/mail.js": [
+    "/assets/Contact-053eM5cG.js"
+  ],
+  "node_modules/lucide-react/dist/esm/icons/map-pin.js": [
+    "/assets/map-pin-CEGjc2J9.js"
+  ],
+  "node_modules/lucide-react/dist/esm/icons/menu.js": [
+    "/assets/x-CMFksBaO.js"
+  ],
+  "node_modules/lucide-react/dist/esm/icons/phone.js": [
+    "/assets/Meta-BGM7a1T8.js"
+  ],
+  "node_modules/lucide-react/dist/esm/icons/play.js": [
+    "/assets/play-BUIt96_B.js"
+  ],
+  "node_modules/lucide-react/dist/esm/icons/search.js": [
+    "/assets/search-CNwseCEu.js"
+  ],
+  "node_modules/lucide-react/dist/esm/icons/settings.js": [
+    "/assets/warehouse-DstwXhf6.js"
+  ],
+  "node_modules/lucide-react/dist/esm/icons/shield-alert.js": [
+    "/assets/Admin-PZVpqL4U.js"
+  ],
+  "node_modules/lucide-react/dist/esm/icons/shield-check.js": [
+    "/assets/shield-check-_35bEIrm.js"
+  ],
+  "node_modules/lucide-react/dist/esm/icons/star.js": [
+    "/assets/Home-mlqL9AXy.js"
+  ],
+  "node_modules/lucide-react/dist/esm/icons/upload.js": [
+    "/assets/ListYourProperty-BYO4IkPA.js"
+  ],
+  "node_modules/lucide-react/dist/esm/icons/user.js": [
+    "/assets/PropertyDetail-DvAoHiyO.js"
+  ],
+  "node_modules/lucide-react/dist/esm/icons/warehouse.js": [
+    "/assets/warehouse-DstwXhf6.js"
+  ],
+  "node_modules/lucide-react/dist/esm/icons/x.js": [
+    "/assets/x-CMFksBaO.js"
+  ],
+  "node_modules/lucide-react/dist/esm/shared/src/utils.js": [
+    "/assets/x-CMFksBaO.js"
+  ],
   "node_modules/prop-types/factoryWithThrowingShims.js": [],
   "node_modules/prop-types/index.js": [],
   "node_modules/prop-types/lib/ReactPropTypesSecret.js": [],
   "node_modules/react-dom/cjs/react-dom.production.min.js": [],
   "node_modules/react-dom/client.js": [
-    "/assets/client-Cayhvq8W.js"
+    "/assets/client-3wHRPAqR.js"
   ],
   "node_modules/react-dom/index.js": [],
   "node_modules/react-fast-compare/index.js": [],
@@ -120,32 +180,81 @@
   "node_modules/vite-react-ssg/dist/shared/vite-react-ssg.C0y5wbxl.mjs": [],
   "node_modules/vite-react-ssg/dist/shared/vite-react-ssg.C6pK7rvr.mjs": [],
   "node_modules/vite-react-ssg/dist/shared/vite-react-ssg.CjIppNIS.mjs": [],
-  "node_modules/zod/v3/ZodError.js": [],
-  "node_modules/zod/v3/errors.js": [],
-  "node_modules/zod/v3/helpers/errorUtil.js": [],
-  "node_modules/zod/v3/helpers/parseUtil.js": [],
-  "node_modules/zod/v3/helpers/util.js": [],
-  "node_modules/zod/v3/locales/en.js": [],
-  "node_modules/zod/v3/types.js": [],
-  "src/components/Meta.jsx": [],
-  "src/components/PropertyCard.jsx": [],
-  "src/components/Shell.jsx": [],
-  "src/lib/admin-data.js": [],
+  "node_modules/zod/v3/ZodError.js": [
+    "/assets/forms-SHiuGgmQ.js"
+  ],
+  "node_modules/zod/v3/errors.js": [
+    "/assets/forms-SHiuGgmQ.js"
+  ],
+  "node_modules/zod/v3/helpers/errorUtil.js": [
+    "/assets/forms-SHiuGgmQ.js"
+  ],
+  "node_modules/zod/v3/helpers/parseUtil.js": [
+    "/assets/forms-SHiuGgmQ.js"
+  ],
+  "node_modules/zod/v3/helpers/util.js": [
+    "/assets/forms-SHiuGgmQ.js"
+  ],
+  "node_modules/zod/v3/locales/en.js": [
+    "/assets/forms-SHiuGgmQ.js"
+  ],
+  "node_modules/zod/v3/types.js": [
+    "/assets/forms-SHiuGgmQ.js"
+  ],
+  "src/components/Meta.jsx": [
+    "/assets/Meta-BGM7a1T8.js"
+  ],
+  "src/components/PropertyCard.jsx": [
+    "/assets/PropertyCard-YivziUCZ.js"
+  ],
+  "src/components/Shell.jsx": [
+    "/assets/Meta-BGM7a1T8.js"
+  ],
+  "src/lib/admin-data.js": [
+    "/assets/Admin-PZVpqL4U.js"
+  ],
+  "src/lib/admin-templates.js": [
+    "/assets/Admin-PZVpqL4U.js"
+  ],
   "src/lib/data.js": [],
-  "src/lib/forms.js": [],
-  "src/lib/icons.jsx": [],
-  "src/lib/media.jsx": [],
+  "src/lib/forms.js": [
+    "/assets/forms-SHiuGgmQ.js"
+  ],
+  "src/lib/icons.jsx": [
+    "/assets/Meta-BGM7a1T8.js"
+  ],
+  "src/lib/media.jsx": [
+    "/assets/media-tSiG0LgA.js"
+  ],
   "src/lib/seed-data.js": [],
   "src/lib/supabase.js": [],
   "src/main.jsx": [],
-  "src/pages/About.jsx": [],
-  "src/pages/Admin.jsx": [],
-  "src/pages/Contact.jsx": [],
-  "src/pages/Home.jsx": [],
-  "src/pages/ListYourProperty.jsx": [],
-  "src/pages/Listings.jsx": [],
-  "src/pages/PropertyDetail.jsx": [],
-  "src/pages/Services.jsx": [],
-  "src/strings.js": [],
+  "src/pages/About.jsx": [
+    "/assets/About-6EhQZzxU.js"
+  ],
+  "src/pages/Admin.jsx": [
+    "/assets/Admin-PZVpqL4U.js"
+  ],
+  "src/pages/Contact.jsx": [
+    "/assets/Contact-053eM5cG.js"
+  ],
+  "src/pages/Home.jsx": [
+    "/assets/Home-mlqL9AXy.js"
+  ],
+  "src/pages/ListYourProperty.jsx": [
+    "/assets/ListYourProperty-BYO4IkPA.js"
+  ],
+  "src/pages/Listings.jsx": [
+    "/assets/Listings-Dc7EyvJM.js"
+  ],
+  "src/pages/PropertyDetail.jsx": [
+    "/assets/PropertyDetail-DvAoHiyO.js"
+  ],
+  "src/pages/Services.jsx": [
+    "/assets/Services-DXa4bTkq.js"
+  ],
+  "src/strings.js": [
+    "/assets/x-CMFksBaO.js"
+  ],
   "src/styles.css": []
 }

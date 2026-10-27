@@ -50,12 +50,12 @@ export function PropertyDetail() {
   useEffect(() => {
     let alive = true;
     getPropertyBySlug(slug).then((res) => {
-      if (alive && res) {
-        setProperty(res);
+      if (alive) {
+        setProperty(res || null);
         setActivePhotoIdx(0);
-        track('property_view', { property_id: res.id, title: res.title });
+        if (res) track('property_view', { property_id: res.id, title: res.title });
       }
-    });
+    }).catch(() => { if (alive) setProperty(null); });
     return () => {
       alive = false;
     };
@@ -154,7 +154,7 @@ export function PropertyDetail() {
     name: property.title,
     description: property.meta_description || property.description,
     url: `${siteOrigin}/properties/${property.slug}`,
-    image: photos.map((p) => resolveImage(p) || `${siteOrigin}/assets/logo-mh.png`),
+    image: photos.map((p) => /^https?:\/\//.test(p) ? p : `${siteOrigin}/assets/logo-mh.png`),
     offers: {
       '@type': 'Offer',
       price: property.price,
@@ -173,7 +173,7 @@ export function PropertyDetail() {
       <Meta
         title={property.meta_title || property.title}
         description={property.meta_description || property.description?.slice(0, 155)}
-        image={resolveImage(property.main_image)}
+        image={/^https?:\/\//.test(property.main_image) ? property.main_image : `${siteOrigin}/assets/logo-mh.png`}
         structured={structuredData}
       />
 
@@ -196,12 +196,12 @@ export function PropertyDetail() {
           >
             <Image src={photos[activePhotoIdx]} alt={property.title} />
             <span className="v1-pcard-listing v1-detail-listing">{property.listing}</span>
-            {property.video_url && (
+            {property.video_tour_url && (
               <button
                 className="v1-detail-video-badge"
                 onClick={(e) => {
                   e.stopPropagation();
-                  window.open(property.video_url, '_blank');
+                  window.open(property.video_tour_url, '_blank');
                 }}
               >
                 <Play size={14} fill="currentColor" /> Video tour
@@ -414,9 +414,9 @@ export function PropertyDetail() {
                   <User size={24} />
                 </div>
                 <div>
-                  <div className="v1-agent-name">{agent?.name || 'Ibrahim Suleiman'}</div>
+                  <div className="v1-agent-name">{agent?.name || ui.brand}</div>
                   <div className="v1-agent-role">
-                    {agent?.role || 'Head, Warehousing Division'}
+                    {agent?.role || 'Property team'}
                   </div>
                 </div>
               </div>

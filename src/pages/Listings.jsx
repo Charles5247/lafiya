@@ -5,6 +5,7 @@ import { Meta } from '../components/Meta';
 import { PropertyCard } from '../components/PropertyCard';
 import { useRows, money } from '../lib/data';
 import { ui } from '../strings';
+import { supabase } from '../lib/supabase';
 import { Grid3X3, List, ChevronLeft, ChevronRight, Search, ArrowRight } from '../lib/icons';
 
 const ITEMS_PER_PAGE = 9;
@@ -15,14 +16,13 @@ export function Listings() {
   const { data: cities } = useRows('cities');
 
   const [params, setSearchParams] = useSearchParams();
+  const [serverPage, setServerPage] = useState([]);
+  const [serverCount, setServerCount] = useState(0);
+  const [serverLoading, setServerLoading] = useState(Boolean(supabase));
 
   // View state: grid or list, stored in localStorage
-  const [view, setView] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('property-view') || 'grid';
-    }
-    return 'grid';
-  });
+  const [view, setView] = useState('grid');
+  useEffect(() => { setView(localStorage.getItem('property-view') || 'grid'); }, []);
 
   const handleViewChange = (newView) => {
     setView(newView);
@@ -39,6 +39,37 @@ export function Listings() {
   const maxPriceParam = params.get('maxPrice') || '';
   const sortParam = params.get('sort') || '';
   const currentPage = Math.max(1, parseInt(params.get('page') || '1', 10));
+
+  useEffect(() => {
+    if (!supabase) return;
+    let alive = true;
+    const category = selectedCategory ? categories.find(c => c.slug === selectedCategory) : null;
+    const city = selectedCity ? cities.find(c => c.slug === selectedCity) : null;
+    if ((selectedCategory && !category && !categories.length) || (selectedCity && !city && !cities.length)) return;
+    if ((selectedCategory && !category) || (selectedCity && !city)) {
+      setServerPage([]);
+      setServerCount(0);
+      setServerLoading(false);
+      return;
+    }
+    setServerLoading(true);
+    let query = supabase.from('properties').select('*', { count: 'exact' }).eq('status', 'Active');
+    if (category) query = query.eq('category_id', category.id);
+    if (city) query = query.eq('city_id', city.id);
+    if (selectedListing) query = query.eq('listing', selectedListing);
+    if (minPriceParam) query = query.gte('price', Number(minPriceParam));
+    if (maxPriceParam) query = query.lte('price', Number(maxPriceParam));
+    if (sortParam === 'priceAsc' || sortParam === 'priceDesc') query = query.order('price', { ascending: sortParam === 'priceAsc' });
+    else if (sortParam === 'newest') query = query.order('listed_at', { ascending: false });
+    else query = query.order('is_featured', { ascending: false }).order('listed_at', { ascending: false });
+    query.range((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE - 1).then(({data,count,error}) => {
+      if (!alive) return;
+      setServerPage(error ? [] : data || []);
+      setServerCount(error ? 0 : count || 0);
+      setServerLoading(false);
+    });
+    return () => { alive = false; };
+  }, [selectedCategory, selectedCity, selectedListing, minPriceParam, maxPriceParam, sortParam, currentPage, categories.length, cities.length]);
 
   // Local state for debounced price slider
   const [sliderPrice, setSliderPrice] = useState(() => {
@@ -141,9 +172,9 @@ export function Listings() {
   }, [filteredProperties, sortParam]);
 
   // Pagination
-  const totalItems = sortedProperties.length;
+  const totalItems = supabase ? serverCount : sortedProperties.length;
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-  const paginatedProperties = sortedProperties.slice(
+  const paginatedProperties = supabase ? serverPage : sortedProperties.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
@@ -282,7 +313,7 @@ export function Listings() {
           </div>
 
           {/* Property Cards or List */}
-          {totalItems > 0 ? (
+          {serverLoading && supabase ? <p>{ui.status.loading}</p> : totalItems > 0 ? (
             view === 'grid' ? (
               <div className="v1-pgrid">
                 {paginatedProperties.map((p) => (

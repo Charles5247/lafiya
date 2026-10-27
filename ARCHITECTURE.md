@@ -6,6 +6,6 @@ Routes: `/`, `/properties`, `/properties/:slug`, `/services`, `/about`, `/list-y
 
 Data: public Supabase queries rely on RLS. Mutations to submissions use `submit-form`; owner uploads use `owner-upload-url`. Staff CRUD uses authenticated Supabase queries under RLS. JSONB values remain native JS arrays/objects.
 
-Environment: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_SITE_URL`, `VITE_GA4_ID`; Edge secrets `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `RESEND_API_KEY`, `OFFICE_EMAIL`, `FROM_EMAIL`, `SITE_ORIGIN`.
+Environment: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_SITE_URL`, `VITE_GA4_ID`; Edge secrets `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `UPLOAD_SIGNING_SECRET`, `RESEND_API_KEY`, `OFFICE_EMAIL`, `FROM_EMAIL`, `SITE_ORIGIN`.
 
 Build: `vite-react-ssg` pre-renders fixed routes and Active property slugs fetched at build time. A Supabase database webhook triggers the host build hook on property changes. Runtime queries refresh visible data.

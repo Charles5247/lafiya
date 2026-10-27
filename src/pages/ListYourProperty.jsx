@@ -58,24 +58,19 @@ export function ListYourProperty() {
             body: { name: file.name, type: file.type, size: file.size },
           });
 
-          if (error || !data?.signedUrl) {
+          if (error || !data?.token) {
             throw new Error('Could not obtain secure upload URL.');
           }
 
-          const uploadRes = await fetch(data.signedUrl, {
-            method: 'PUT',
-            headers: { 'Content-Type': file.type },
-            body: file,
-          });
+          const uploadRes = await supabase.storage.from('owner-uploads').uploadToSignedUrl(data.path, data.token, file, { contentType: file.type });
 
-          if (!uploadRes.ok) {
+          if (uploadRes.error) {
             throw new Error(`Upload failed for ${file.name}`);
           }
 
           newUploads.push(data.path);
         } else {
-          // Local/offline mock upload path
-          newUploads.push(`pending/${crypto.randomUUID()}/${file.name.replace(/[^a-zA-Z0-9._-]/g, '-')}`);
+          throw new Error('Photo uploads require a connected Supabase project.');
         }
       }
 

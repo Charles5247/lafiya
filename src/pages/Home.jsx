@@ -171,7 +171,7 @@ export function Home() {
                   ))}
                 </div>
                 <span>
-                  <strong>4.9/5</strong> · {metrics?.review_count || 218} client reviews · Response in 4 hours
+                  <strong>{metrics?.client_rating != null ? `${metrics.client_rating}/5` : '—'}</strong> · {metrics?.review_count ?? '—'} client reviews · Response in {metrics?.response_time_hours ?? '—'} hours
                 </span>
               </div>
             </div>
@@ -298,24 +298,24 @@ export function Home() {
         <div className="v1-container">
           <div className="v1-trustbar-inner">
             <div className="v1-trustbar-item">
-              <span className="v1-trustbar-n">{metrics?.years_in_business || 17}</span>
+              <span className="v1-trustbar-n">{metrics?.years_in_business ?? '—'}</span>
               <span className="v1-trustbar-l">Years in business</span>
             </div>
             <div className="v1-trustbar-item">
-              <span className="v1-trustbar-n">{metrics?.properties_transacted || 340}+</span>
+              <span className="v1-trustbar-n">{metrics?.properties_transacted != null ? `${metrics.properties_transacted}+` : '—'}</span>
               <span className="v1-trustbar-l">Deals closed</span>
             </div>
             <div className="v1-trustbar-item">
-              <span className="v1-trustbar-n">{metrics?.value_of_deals_closed || '₦12B+'}</span>
+              <span className="v1-trustbar-n">{metrics?.value_of_deals_closed ?? '—'}</span>
               <span className="v1-trustbar-l">Value of deals</span>
             </div>
             <div className="v1-trustbar-item">
-              <span className="v1-trustbar-n">{metrics?.review_count || 218}</span>
+              <span className="v1-trustbar-n">{metrics?.review_count ?? '—'}</span>
               <span className="v1-trustbar-l">Client reviews</span>
             </div>
             <div className="v1-trustbar-item">
               <span className="v1-trustbar-n">
-                {metrics?.response_time_hours || 4}<span className="v1-trustbar-suffix">h</span>
+                {metrics?.response_time_hours != null ? `${metrics.response_time_hours}h` : '—'}
               </span>
               <span className="v1-trustbar-l">Response time</span>
             </div>
@@ -442,17 +442,19 @@ export function Home() {
             <div className="v1-ceo-attribution">
               <strong>{about?.ceo_name || 'Mr. Kingsley Agena'}</strong> · {about?.ceo_title || 'Founder & Chief Executive'}
             </div>
-            <a
+            {about?.ceo_video_url && about.ceo_video_url !== '#' && <a
               className="v1-ceo-play"
-              href="#about-story"
+              href={about.ceo_video_url}
+              target="_blank"
+              rel="noopener noreferrer"
               aria-label={ui.actions.watchInterview}
             >
               <span className="v1-ceo-play-ring" />
               <span className="v1-ceo-play-btn">
                 <Play size={30} fill="currentColor" />
               </span>
-            </a>
-            <div className="v1-ceo-meta">{ui.actions.watchInterview}</div>
+            </a>}
+            {about?.ceo_video_url && about.ceo_video_url !== '#' && <div className="v1-ceo-meta">{ui.actions.watchInterview}</div>}
           </div>
         </div>
       </section>
@@ -471,25 +473,24 @@ export function Home() {
                   "Mai'Lafiya began in 2008 as a small family trading business in Bompai, Kano. Helping neighbours and suppliers find reliable warehouse space taught us that in Northern Nigeria, property is built on relationships and reputation."}
               </p>
               <p className="v1-story-p">
-                {about?.story_body?.split('\n\n')[1] ||
-                  'Today we are a registered real-estate, property-management and construction-consulting firm serving six cities, with 340+ transactions and ₦12B+ in deals closed — and we still walk every property ourselves.'}
+                {about?.story_body?.split('\n\n')[1] || ui.footer.about}
               </p>
 
               <div className="v1-story-stats">
                 <div>
-                  <div className="v1-stat-n">{metrics?.years_in_business || 17}</div>
+                  <div className="v1-stat-n">{metrics?.years_in_business ?? '—'}</div>
                   <div className="v1-stat-l">Years in business</div>
                 </div>
                 <div>
-                  <div className="v1-stat-n">{metrics?.properties_transacted || 340}+</div>
+                  <div className="v1-stat-n">{metrics?.properties_transacted != null ? `${metrics.properties_transacted}+` : '—'}</div>
                   <div className="v1-stat-l">Properties transacted</div>
                 </div>
                 <div>
-                  <div className="v1-stat-n">{metrics?.value_of_deals_closed || '₦12B+'}</div>
+                  <div className="v1-stat-n">{metrics?.value_of_deals_closed ?? '—'}</div>
                   <div className="v1-stat-l">Transaction volume</div>
                 </div>
                 <div>
-                  <div className="v1-stat-n">{(metrics?.square_metres_managed || 480000).toLocaleString('en-NG')}</div>
+                  <div className="v1-stat-n">{metrics?.square_metres_managed != null ? metrics.square_metres_managed.toLocaleString('en-NG') : '—'}</div>
                   <div className="v1-stat-l">Square metres managed</div>
                 </div>
               </div>
@@ -503,7 +504,7 @@ export function Home() {
               />
               <div className="v1-story-badge">
                 <div>
-                  <div className="v1-story-badge-n">17</div>
+                  <div className="v1-story-badge-n">{metrics?.years_in_business ?? '—'}</div>
                   <div className="v1-story-badge-l">Years of trust</div>
                 </div>
               </div>
@@ -632,4 +633,8 @@ export function Home() {
     </Shell>
   );
 }
+
+
+
+
 

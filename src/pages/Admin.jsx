@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { ui } from '../strings';
 import { csvCell, jsonValue } from '../lib/admin-data';
+import { adminTemplates } from '../lib/admin-templates';
 import {
   Menu,
   X,
@@ -52,6 +53,9 @@ export default function Admin() {
   const [rows, setRows] = useState([]);
   const [draft, setDraft] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+  const [sortColumn, setSortColumn] = useState('');
+  const [relations, setRelations] = useState({});
   const [errorMsg, setErrorMsg] = useState('');
   const [infoMsg, setInfoMsg] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -122,6 +126,14 @@ export default function Admin() {
       fetchTableRows();
     }
   }, [currentTable, profile?.role]);
+
+  useEffect(() => {
+    if (!profile || !supabase) return;
+    Promise.all(['property_categories', 'cities', 'agents', 'profiles', 'properties'].map(async table => {
+      const { data } = await supabase.from(table).select('*').limit(500);
+      return [table, data || []];
+    })).then(entries => setRelations(Object.fromEntries(entries)));
+  }, [profile?.role]);
 
   async function loadDashboardCounts() {
     try {
@@ -265,6 +277,17 @@ export default function Admin() {
     } catch (err) {
       setErrorMsg(err.message);
     }
+  }
+
+  async function openOwnerUpload(path) {
+    const tab = window.open('', '_blank');
+    const { data, error } = await supabase.storage.from('owner-uploads').createSignedUrl(path, 60);
+    if (error || !data?.signedUrl) {
+      tab?.close();
+      setErrorMsg(error?.message || 'Could not open photo.');
+      return;
+    }
+    if (tab) tab.location.href = data.signedUrl;
   }
 
   // Media upload with required alt text
@@ -458,8 +481,8 @@ export default function Admin() {
 
   // Filter rows by search query
   const filteredRows = rows.filter((r) =>
-    JSON.stringify(r).toLowerCase().includes(searchQuery.toLowerCase())
-  );
+    (!statusFilter || r.status === statusFilter) && JSON.stringify(r).toLowerCase().includes(searchQuery.toLowerCase())
+  ).sort((a,b) => sortColumn ? String(a[sortColumn] ?? '').localeCompare(String(b[sortColumn] ?? ''), undefined, {numeric:true}) : 0);
 
   return (
     <div className="v1-admin-page">
@@ -598,9 +621,11 @@ export default function Admin() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
-                <button className="v1-btn v1-btn-primary" onClick={() => setDraft({})}>
+                {adminTemplates[currentTable] && <button className="v1-btn v1-btn-primary" onClick={() => setDraft({...adminTemplates[currentTable]})}>
                   + New Record
-                </button>
+                </button>}
+                {['enquiries', 'property_listings', 'contact_messages', 'properties'].includes(currentTable) && <select aria-label="Filter by status" value={statusFilter} onChange={e => setStatusFilter(e.target.value)}><option value="">All statuses</option>{[...new Set(rows.map(r => r.status).filter(Boolean))].map(s => <option key={s}>{s}</option>)}</select>}
+                <select aria-label="Sort records" value={sortColumn} onChange={e => setSortColumn(e.target.value)}><option value="">Default order</option>{Object.keys(rows[0] || adminTemplates[currentTable] || {}).map(k => <option key={k} value={k}>{k.replace(/_/g,' ')}</option>)}</select>
                 <button className="v1-btn v1-btn-outline" onClick={handleExportCsv}>
                   Export CSV
                 </button>
@@ -665,6 +690,11 @@ export default function Admin() {
                             }
                             onChange={(e) => setDraft({ ...draft, [col]: e.target.value })}
                           />
+                        ) : ['category_id', 'city_id', 'agent_id', 'property_id', 'assigned_to'].includes(col) ? (
+                          <select value={draft[col] ?? ''} onChange={e => setDraft({...draft, [col]: e.target.value || null})}>
+                            <option value="">Select…</option>
+                            {(relations[{category_id:'property_categories',city_id:'cities',agent_id:'agents',property_id:'properties',assigned_to:'profiles'}[col]] || []).map(option => <option key={option.id} value={option.id}>{option.name || option.display_name || option.title || option.email}</option>)}
+                          </select>
                         ) : col === 'role' && currentTable === 'profiles' ? (
                           <select
                             value={draft[col] || 'user'}
@@ -744,6 +774,7 @@ export default function Admin() {
                                 Delete
                               </button>
                             )}
+                            {currentTable === 'property_listings' && Array.isArray(r.uploads) && r.uploads.map((path, index) => <button key={index} className="v1-btn v1-btn-sm v1-btn-outline" onClick={() => openOwnerUpload(path)}>Photo {index + 1}</button>)}
                           </div>
                         </td>
                       </tr>

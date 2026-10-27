@@ -1,5 +1,7 @@
 # Mai'Lafiya Homes & Properties Ltd.
 
+See [QA-REPORT.md](QA-REPORT.md) for the acceptance checklist and unverified live checks. The current repository builds without Supabase credentials using the supplied seed preview; connect Supabase before launch.
+
 React 18 + Vite, plain JSX, Supabase backend. No payment flow.
 
 ## Run locally

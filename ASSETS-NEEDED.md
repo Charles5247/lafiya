@@ -14,5 +14,6 @@ The provided `logo-mh.png` and `founder-portrait-cropped.jpg` are installed in `
 | land-1, land-2 | Land cards and galleries | 1600×1000 |
 | team-1, team-2, team-3 | About team | 800×1000 |
 | handshake-1, handshake-2 | Story and case studies | 1600×1000 |
+| ceo-portrait | Seeded CEO portrait reference; replace with supplied `founder-portrait-cropped.jpg` or update the database value | 800×1000 |
 
 The seed may reference additional `assets/` keys. They also need matching files or admin replacement. Review and partner avatar assets referenced in `seed.sql` need 160×160 images. The site displays an MH placeholder for every absent file.

@@ -6,12 +6,24 @@ import { Phone, WhatsAppIcon, Menu, X, ArrowRight, ShieldCheck } from '../lib/ic
 
 export function Shell({ children }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [consent, setConsent] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('analytics-consent');
-    }
-    return 'unset';
-  });
+  const [consent, setConsent] = useState('unset');
+
+  useEffect(() => {
+    setConsent(localStorage.getItem('analytics-consent') || 'unset');
+  }, []);
+
+  useEffect(() => {
+    if (consent !== 'yes' || !import.meta.env.VITE_GA4_ID || document.getElementById('ga4-script')) return;
+    const script = document.createElement('script');
+    script.id = 'ga4-script';
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${import.meta.env.VITE_GA4_ID}`;
+    script.async = true;
+    document.head.appendChild(script);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+    window.gtag('config', import.meta.env.VITE_GA4_ID);
+  }, [consent]);
 
   const location = useLocation();
   const isDetailPage = location.pathname.startsWith('/properties/') && location.pathname !== '/properties';
@@ -26,19 +38,6 @@ export function Shell({ children }) {
   const handleConsent = (choice) => {
     localStorage.setItem('analytics-consent', choice);
     setConsent(choice);
-    if (choice === 'yes' && import.meta.env.VITE_GA4_ID) {
-      const script = document.createElement('script');
-      script.src = `https://www.googletagmanager.com/gtag/js?id=${import.meta.env.VITE_GA4_ID}`;
-      script.async = true;
-      document.head.appendChild(script);
-
-      window.dataLayer = window.dataLayer || [];
-      window.gtag = function () {
-        window.dataLayer.push(arguments);
-      };
-      window.gtag('js', new Date());
-      window.gtag('config', import.meta.env.VITE_GA4_ID);
-    }
   };
 
   const cleanPhone = ui.phone.replace(/\s+/g, '');

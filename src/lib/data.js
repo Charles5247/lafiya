@@ -10,7 +10,7 @@ export function money(n) {
 }
 
 export function useRows(table, filterKey = '') {
-  const fallback = seedData[table] || [];
+  const fallback = supabase ? [] : seedData[table] || [];
   const [data, setData] = useState(fallback);
   const [loading, setLoading] = useState(Boolean(supabase));
   const [error, setError] = useState(null);
@@ -38,16 +38,14 @@ export function useRows(table, filterKey = '') {
         if (!alive) return;
         if (res.error) {
           setError(res.error);
-          setData(fallback);
-        } else if (res.data && res.data.length > 0) {
-          setData(res.data);
+          setData([]);
         } else {
-          setData(fallback);
+          setData(res.data || []);
         }
       } catch (err) {
         if (alive) {
           setError(err);
-          setData(fallback);
+          setData([]);
         }
       } finally {
         if (alive) setLoading(false);
@@ -64,7 +62,7 @@ export function useRows(table, filterKey = '') {
 }
 
 export function useOne(table) {
-  const fallback = seedData[table]?.[0] || null;
+  const fallback = supabase ? null : seedData[table]?.[0] || null;
   const [data, setData] = useState(fallback);
   const [loading, setLoading] = useState(Boolean(supabase));
   const [error, setError] = useState(null);
@@ -83,16 +81,14 @@ export function useOne(table) {
         if (!alive) return;
         if (resError) {
           setError(resError);
-          setData(fallback);
-        } else if (resData) {
-          setData(resData);
+          setData(null);
         } else {
-          setData(fallback);
+          setData(resData || null);
         }
       } catch (err) {
         if (alive) {
           setError(err);
-          setData(fallback);
+          setData(null);
         }
       } finally {
         if (alive) setLoading(false);
@@ -110,24 +106,18 @@ export function useOne(table) {
 
 export async function getActiveProperties() {
   if (supabase) {
-    try {
-      const { data, error } = await supabase.from('properties').select('*').eq('status', 'Active').order('listed_at', { ascending: false });
-      if (!error && data && data.length > 0) return data;
-    } catch {
-      // Fallback below
-    }
+    const { data, error } = await supabase.from('properties').select('*').eq('status', 'Active').order('listed_at', { ascending: false });
+    if (error) throw error;
+    return data || [];
   }
   return seedData.properties;
 }
 
 export async function getPropertyBySlug(slug) {
   if (supabase) {
-    try {
-      const { data, error } = await supabase.from('properties').select('*').eq('slug', slug).eq('status', 'Active').maybeSingle();
-      if (!error && data) return data;
-    } catch {
-      // Fallback below
-    }
+    const { data, error } = await supabase.from('properties').select('*').eq('slug', slug).eq('status', 'Active').maybeSingle();
+    if (error) throw error;
+    return data;
   }
   return seedData.properties.find((p) => p.slug === slug) || null;
 }

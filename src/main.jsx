@@ -1,13 +1,5 @@
 import React from 'react';
 import { ViteReactSSG } from 'vite-react-ssg';
-import { Home } from './pages/Home';
-import { Listings } from './pages/Listings';
-import { PropertyDetail } from './pages/PropertyDetail';
-import { Services } from './pages/Services';
-import { About } from './pages/About';
-import { ListYourProperty } from './pages/ListYourProperty';
-import { Contact } from './pages/Contact';
-import Admin from './pages/Admin';
 import { getActiveProperties, getPropertyBySlug } from './lib/data';
 import './styles.css';
 
@@ -15,15 +7,15 @@ export const createRoot = ViteReactSSG({
   routes: [
     {
       path: '/',
-      element: <Home />,
+      lazy: async () => ({ Component: (await import('./pages/Home')).Home }),
     },
     {
       path: '/properties',
-      element: <Listings />,
+      lazy: async () => ({ Component: (await import('./pages/Listings')).Listings }),
     },
     {
       path: '/properties/:slug',
-      element: <PropertyDetail />,
+      lazy: async () => ({ Component: (await import('./pages/PropertyDetail')).PropertyDetail }),
       getStaticPaths: async () => {
         const properties = await getActiveProperties();
         return (properties || []).map((p) => `/properties/${p.slug}`);
@@ -35,23 +27,23 @@ export const createRoot = ViteReactSSG({
     },
     {
       path: '/services',
-      element: <Services />,
+      lazy: async () => ({ Component: (await import('./pages/Services')).Services }),
     },
     {
       path: '/about',
-      element: <About />,
+      lazy: async () => ({ Component: (await import('./pages/About')).About }),
     },
     {
       path: '/list-your-property',
-      element: <ListYourProperty />,
+      lazy: async () => ({ Component: (await import('./pages/ListYourProperty')).ListYourProperty }),
     },
     {
       path: '/contact',
-      element: <Contact />,
+      lazy: async () => ({ Component: (await import('./pages/Contact')).Contact }),
     },
     {
       path: '/admin/*',
-      element: <Admin />,
+      lazy: async () => ({ Component: (await import('./pages/Admin')).default }),
     },
   ],
 });

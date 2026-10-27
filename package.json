@@ -1,1 +1,24 @@
-{"name":"mailafiya-homes","private":true,"version":"1.0.0","type":"module","scripts":{"dev":"vite --host 0.0.0.0","build":"vite-react-ssg build && node scripts/sitemap.mjs","preview":"vite preview","test":"node --test tests/*.test.js"},"dependencies":{"@supabase/supabase-js":"^2.57.0","lucide-react":"^0.468.0","react":"^18.3.1","react-dom":"^18.3.1","react-router-dom":"^6.30.1","vite-react-ssg":"^0.8.1","zod":"^3.25.76"},"devDependencies":{"vite":"^6.3.5"}}
+{
+  "name": "mailafiya-homes",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite-react-ssg build && node scripts/sitemap.mjs",
+    "preview": "vite preview",
+    "test": "node --test tests/*.test.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "2.118.0",
+    "lucide-react": "0.468.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-router-dom": "6.30.6",
+    "vite-react-ssg": "0.8.9",
+    "zod": "3.25.76"
+  },
+  "devDependencies": {
+    "vite": "6.4.5"
+  }
+}

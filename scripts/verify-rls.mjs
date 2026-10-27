@@ -37,14 +37,30 @@ for (const table of ['enquiries', 'property_listings', 'contact_messages', 'rate
   console.log(`PASS: Anon read from "${table}" returned 0 records (blocked by RLS).`);
 }
 
-// 3. Anon CANNOT insert into any table directly
-for (const table of ['properties', 'enquiries', 'property_listings', 'contact_messages']) {
-  const { error } = await supabase.from(table).insert({ title: 'Unauthorized probe' });
+// Use structurally valid payloads so a missing-column or NOT NULL error cannot masquerade as RLS.
+const marker = `rls-probe-${Date.now()}`;
+const attempts = {
+  enquiries: {name:'RLS Probe',phone:'+234 803 555 0142',email:'probe@example.test',inquiry_type:'Request info',message:'Testing that anonymous inserts are denied.',source:'property-detail'},
+  property_listings: {owner_name:'RLS Probe',phone:'+234 803 555 0142',email:'probe@example.test',property_type:'Warehouse',intent:'Rent',city:'Kano',approximate_size:'100 sqm',address:'Test address',notes:'Testing that anonymous inserts are denied.',uploads:[]},
+  contact_messages: {name:'RLS Probe',phone:'+234 803 555 0142',email:'probe@example.test',enquiry_type:'General enquiry',message:'Testing that anonymous inserts are denied.'},
+};
+const [{data:category},{data:city},{data:agent}] = await Promise.all([
+  supabase.from('property_categories').select('id').limit(1).maybeSingle(),
+  supabase.from('cities').select('id').limit(1).maybeSingle(),
+  supabase.from('agents').select('id').limit(1).maybeSingle(),
+]);
+if (category && city && agent) attempts.properties = {title:marker,slug:marker,short_title:marker,category_id:category.id,sub_category:'Lease',listing:'For Lease',price:1,city_id:city.id,area:'Test',state:'Kano State',size:'100 sqm',main_image:'',description:'RLS verification record',agent_id:agent.id,status:'Draft',gallery:[],badges:[],features:[]};
+for (const [table,payload] of Object.entries(attempts)) {
+  const { error } = await supabase.from(table).insert(payload);
   if (!error) {
-    console.error(`FAIL: Anon was able to write to "${table}" directly! RLS violation!`);
+    console.error(`FAIL: Anon inserted into "${table}". This test must run against a disposable project; remove the probe row immediately.`);
     process.exit(1);
   }
-  console.log(`PASS: Direct write to "${table}" rejected by RLS: ${error.message}`);
+  if (error.code !== '42501') {
+    console.error(`INCONCLUSIVE: "${table}" rejected the insert with ${error.code}: ${error.message}`);
+    process.exit(1);
+  }
+  console.log(`PASS: Direct insert into "${table}" rejected by RLS.`);
 }
 
 console.log('All RLS security checks passed successfully!');
