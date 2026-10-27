@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { supabase } from './supabase';
+import { supabase } from './supabase.js';
 export const person = {name:z.string().trim().min(2),phone:z.string().trim().regex(/^[+\d\s()\-]{7,}$/),email:z.string().email()};
 export const enquirySchema = z.object({...person,message:z.string().trim().min(10),inquiry_type:z.enum(['Request viewing','Request info','Make offer']),property_id:z.number().nullable().optional(),source:z.enum(['property-detail','homepage-cta']),website:z.string().optional()});
 export const contactSchema = z.object({...person,message:z.string().trim().min(10),enquiry_type:z.string().min(2),website:z.string().optional()});

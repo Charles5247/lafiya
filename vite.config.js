@@ -1,2 +1,12 @@
 import { defineConfig } from 'vite';
-export default defineConfig({ssgOptions:{entry:'src/main.jsx',dirStyle:'nested'}});
+
+export default defineConfig({
+  esbuild: {
+    jsx: 'automatic',
+  },
+  ssgOptions: {
+    entry: 'src/main.jsx',
+    dirStyle: 'nested',
+  },
+});
+

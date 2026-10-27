@@ -1,0 +1,22 @@
+{
+  "_client-Cayhvq8W.js": {
+    "file": "assets/client-Cayhvq8W.js",
+    "name": "client",
+    "isDynamicEntry": true,
+    "imports": [
+      "index.html"
+    ]
+  },
+  "index.html": {
+    "file": "assets/app-DQm4ViSb.js",
+    "name": "app",
+    "src": "index.html",
+    "isEntry": true,
+    "dynamicImports": [
+      "_client-Cayhvq8W.js"
+    ],
+    "css": [
+      "assets/app-Bgcnw0Wt.css"
+    ]
+  }
+}

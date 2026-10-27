@@ -1,5 +1,51 @@
-import {writeFile,mkdir} from 'node:fs/promises';
-const origin=(process.env.VITE_SITE_URL||'https://mailafiyahomes.ng').replace(/\/$/,'');
-const routes=['/','/properties','/services','/about','/list-your-property','/contact'];
-if(process.env.VITE_SUPABASE_URL&&process.env.VITE_SUPABASE_ANON_KEY){const response=await fetch(`${process.env.VITE_SUPABASE_URL}/rest/v1/properties?select=slug&status=eq.Active`,{headers:{apikey:process.env.VITE_SUPABASE_ANON_KEY,Authorization:`Bearer ${process.env.VITE_SUPABASE_ANON_KEY}`}});if(response.ok)for(const p of await response.json())routes.push(`/properties/${p.slug}`)}
-await mkdir('dist',{recursive:true});await writeFile('dist/sitemap.xml',`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${routes.map(x=>`<url><loc>${origin+x}</loc></url>`).join('')}</urlset>`);
+import { writeFile, mkdir } from 'node:fs/promises';
+import { seedData } from '../src/lib/seed-data.js';
+
+const origin = (process.env.VITE_SITE_URL || 'https://mailafiyahomes.ng').replace(/\/$/, '');
+const routes = [
+  '/',
+  '/properties',
+  '/services',
+  '/about',
+  '/list-your-property',
+  '/contact',
+];
+
+// Add active property routes
+let propertySlugs = seedData.properties.map((p) => p.slug);
+
+if (process.env.VITE_SUPABASE_URL && process.env.VITE_SUPABASE_ANON_KEY) {
+  try {
+    const res = await fetch(`${process.env.VITE_SUPABASE_URL}/rest/v1/properties?select=slug&status=eq.Active`, {
+      headers: {
+        apikey: process.env.VITE_SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${process.env.VITE_SUPABASE_ANON_KEY}`,
+      },
+    });
+    if (res.ok) {
+      const live = await res.json();
+      if (live && live.length > 0) {
+        propertySlugs = live.map((p) => p.slug);
+      }
+    }
+  } catch {
+    // Keep fallback slugs
+  }
+}
+
+for (const slug of propertySlugs) {
+  routes.push(`/properties/${slug}`);
+}
+
+await mkdir('dist', { recursive: true });
+
+const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${routes.map((path) => `  <url>
+    <loc>${origin}${path}</loc>
+    <changefreq>weekly</changefreq>
+  </url>`).join('\n')}
+</urlset>`;
+
+await writeFile('dist/sitemap.xml', sitemapXml);
+console.log(`Generated dist/sitemap.xml with ${routes.length} URLs`);
