@@ -978,6 +978,44 @@ input, select, textarea {
   font-size: 13px;
   color: rgba(251,247,241,0.7);
 }
+.v1-video-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(6, 15, 45, 0.92);
+}
+.v1-video-dialog {
+  position: relative;
+  width: min(100%, 960px);
+  aspect-ratio: 16 / 9;
+  background: #000;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+}
+.v1-video-dialog iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.v1-video-close {
+  position: absolute;
+  z-index: 1;
+  top: -44px;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  background: var(--green);
+  color: #fff;
+  cursor: pointer;
+}
 
 /* ================================ Story & Stats ================================ */
 .v1-story-grid {

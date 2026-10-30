@@ -292,7 +292,7 @@ export const seedData = {
       ceo_quote:
         "When you trust us with a property, you are trusting us with your family's or your company's future. We never forget that.",
       ceo_image: 'assets/founder-portrait-cropped.jpg',
-      ceo_video_url: null,
+      ceo_video_url: 'https://drive.google.com/file/d/1tYeomZVlTK2irv9rCU1Q7oQQgS75_1I3/view',
     },
   ],
 

@@ -4,6 +4,7 @@ import { Shell } from '../components/Shell';
 import { Meta } from '../components/Meta';
 import { PropertyCard } from '../components/PropertyCard';
 import { Image } from '../lib/media';
+import { drivePreviewUrl } from '../lib/video';
 import { useRows, useOne, money, track } from '../lib/data';
 import { ui } from '../strings';
 import {
@@ -20,6 +21,7 @@ import {
   Clock,
   Key,
   Play,
+  X,
   MapPin,
   WhatsAppIcon,
   VerifiedBadgeIcon,
@@ -51,6 +53,7 @@ export function Home() {
 
   const [slide, setSlide] = useState(0);
   const [pause, setPause] = useState(false);
+  const [videoOpen, setVideoOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('Warehouse');
   const [search, setSearch] = useState({
     listing: '',
@@ -60,6 +63,17 @@ export function Home() {
   });
 
   const navigate = useNavigate();
+  const interviewUrl = about?.ceo_video_url;
+  const interviewEmbed = drivePreviewUrl(interviewUrl);
+
+  useEffect(() => {
+    if (!videoOpen) return;
+    const closeOnEscape = (event) => {
+      if (event.key === 'Escape') setVideoOpen(false);
+    };
+    window.addEventListener('keydown', closeOnEscape);
+    return () => window.removeEventListener('keydown', closeOnEscape);
+  }, [videoOpen]);
 
   // Carousel timer: 5.5s interval, respects prefers-reduced-motion
   useEffect(() => {
@@ -442,22 +456,29 @@ export function Home() {
             <div className="v1-ceo-attribution">
               <strong>{about?.ceo_name || 'Mr. Kingsley Agena'}</strong> · {about?.ceo_title || 'Founder & Chief Executive'}
             </div>
-            {about?.ceo_video_url && about.ceo_video_url !== '#' && <a
+            {interviewEmbed && <button
+              type="button"
               className="v1-ceo-play"
-              href={about.ceo_video_url}
-              target="_blank"
-              rel="noopener noreferrer"
+              onClick={() => setVideoOpen(true)}
               aria-label={ui.actions.watchInterview}
             >
               <span className="v1-ceo-play-ring" />
               <span className="v1-ceo-play-btn">
                 <Play size={30} fill="currentColor" />
               </span>
-            </a>}
-            {about?.ceo_video_url && about.ceo_video_url !== '#' && <div className="v1-ceo-meta">{ui.actions.watchInterview}</div>}
+            </button>}
+            {interviewUrl && !interviewEmbed && <a href={interviewUrl} target="_blank" rel="noopener noreferrer">{ui.actions.watchInterview}</a>}
+            {interviewUrl && <div className="v1-ceo-meta">{ui.actions.watchInterview}</div>}
           </div>
         </div>
       </section>
+
+      {videoOpen && interviewEmbed && <div className="v1-video-overlay" role="presentation" onClick={() => setVideoOpen(false)}>
+        <div className="v1-video-dialog" role="dialog" aria-modal="true" aria-label={ui.actions.watchInterview} onClick={(event) => event.stopPropagation()}>
+          <button type="button" className="v1-video-close" onClick={() => setVideoOpen(false)} aria-label={ui.actions.closeInterview}><X size={22} /></button>
+          <iframe src={interviewEmbed} title={ui.actions.watchInterview} allow="autoplay; fullscreen" allowFullScreen referrerPolicy="strict-origin-when-cross-origin" />
+        </div>
+      </div>}
 
       {/* 9. STORY + STATS */}
       <section className="v1-section v1-section-deep" id="about-story">

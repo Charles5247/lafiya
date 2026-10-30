@@ -33,7 +33,8 @@ export const ui = {
     send: 'Send message',
     enquire: 'Enquire now',
     callNow: 'Call now',
-    watchInterview: 'Watch the full interview · 8 min 42 sec',
+    watchInterview: 'Watch the full interview',
+    closeInterview: 'Close interview video',
     shortlist: 'Get a shortlist',
   },
 

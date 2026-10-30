@@ -7,3 +7,13 @@
 5. On a disposable or staging project, run `node --env-file=.env.local scripts/verify-rls.mjs`. It reads Active properties and attempts structurally valid anonymous inserts, requiring an RLS denial (`42501`). Query `enquiries`, `property_listings`, and `contact_messages` as anon and confirm zero rows. Repeat as an editor: content can be edited, but `profiles`, `site_settings`, and `metrics` cannot.
 
 The SQL source contains 20 public tables including `rate_limits`; the brief calls these 19 content collections plus the rate-limit table.
+
+If the three SQL files were run before the CEO interview URL was added, run this once in SQL Editor:
+
+```sql
+update public.about_page
+set ceo_video_url = 'https://drive.google.com/file/d/1tYeomZVlTK2irv9rCU1Q7oQQgS75_1I3/view'
+where id = 1;
+```
+
+In Google Drive, give the video **Anyone with the link → Viewer** access so visitors can play its embedded preview. The file owner controls this permission; the app cannot change it.

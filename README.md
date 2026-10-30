@@ -24,3 +24,5 @@ Rollback the frontend by redeploying the previous build. For database changes, r
 Sign in at `/admin`. Use the left menu to choose a content table, search records, edit, save, or export CSV. `properties` holds listings; set `status` to `Active` to publish. `hero_slides`, `promises`, reviews, case studies, partners, and the singleton page tables control public copy. Add photos through Media library with required alt text, then paste the resulting URL into content. Owner submissions appear under `property_listings`; use Convert to create a Draft property, complete its fields, then activate it. Admins may update staff roles; editors cannot. Change the initial password when prompted.
 
 Uploaded owner photos remain private. Staff use signed Storage links to view them. Keep the Resend sender domain verified and set `VITE_GA4_ID` when analytics is ready; visitors' consent controls analytics events.
+
+The CEO interview is edited in `about_page.ceo_video_url`. The supplied Google Drive link opens in an on-page viewer; the Drive file must be shared as **Anyone with the link → Viewer** for public visitors.
