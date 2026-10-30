@@ -22,14 +22,13 @@ if (process.env.VITE_SUPABASE_URL && process.env.VITE_SUPABASE_ANON_KEY) {
         Authorization: `Bearer ${process.env.VITE_SUPABASE_ANON_KEY}`,
       },
     });
-    if (res.ok) {
-      const live = await res.json();
-      if (live && live.length > 0) {
-        propertySlugs = live.map((p) => p.slug);
-      }
-    }
-  } catch {
-    // Keep fallback slugs
+    if (!res.ok) throw new Error('Supabase sitemap query failed: ' + res.status);
+    const live = await res.json();
+    propertySlugs = live.map((p) => p.slug);
+  } catch (error) {
+    console.error(error);
+    process.exitCode = 1;
+    throw error;
   }
 }
 

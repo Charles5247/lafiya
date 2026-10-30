@@ -16,3 +16,9 @@
 | No console errors or broken images | **Unverified in browser** | Missing local images render an MH fallback on error. Real browser console/network check remains. |
 
 Local commands: `npm test` passed 13/13, including the owner upload path signature check; `npm run build` passed and generated 18 routes. No production deployment or live database changes were made.
+
+## Vercel release status, 30 October 2026
+
+**Prepared, not deployed.** `vercel.json` now sets the Vite build, `dist` output, and `/admin` rewrite. `npm test` passes 13/13 and `npm run build` generates 18 pages. A Vercel project named `mailafiya-homes` was created (`prj_n3uQcYJynEbFZuc3YeEJChEII1zo`), with no deployment yet. The Vercel connection then required team access approval for further settings changes. This workspace also has no populated Supabase URL or anon key. Publishing now would show the seed preview and leave forms and admin disconnected. Finish the Supabase setup, configure Vercel environment variables, then deploy and run the live checks above.
+
+Additional gaps: several page/admin UI strings are still inline rather than in `src/strings.js`; the first-login password-change screen is a client gate and has not been verified against live Auth; the legal footer labels do not yet link to published privacy/terms pages. These need completion before calling the site fully launched.
