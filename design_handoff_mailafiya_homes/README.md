@@ -302,7 +302,7 @@ Key mobile transformations:
 - Floating WhatsApp button: pre-fill `"Hi Mai'Lafiya, I'd like to enquire about a property."`
 
 ### Phone buttons
-- `tel:+2348035550142` links — trigger native dialer
+- `tel:+2349163222226` links — trigger native dialer
 
 ### CEO video
 - Currently a static play button. On click, replace with embedded video player (YouTube
