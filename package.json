@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "build": "vite-react-ssg build && node scripts/sitemap.mjs",
+    "build": "node ./node_modules/vite-react-ssg/bin/vite-react-ssg.js build && node scripts/sitemap.mjs",
     "preview": "vite preview",
     "test": "node --test tests/*.test.js"
   },
