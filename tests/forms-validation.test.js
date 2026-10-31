@@ -5,7 +5,7 @@ import { enquirySchema, contactSchema, ownerSchema } from '../src/lib/forms.js';
 test('Enquiry validation accepts valid input', () => {
   const valid = {
     name: 'Alhaji Musa',
-    phone: '+234 803 555 0142',
+    phone: '+234 916 322 2226',
     email: 'musa@example.com',
     inquiry_type: 'Request viewing',
     message: 'We are interested in leasing the 4,200 sqm warehouse.',
@@ -37,7 +37,7 @@ test('Enquiry validation rejects short names or invalid phone numbers', () => {
 test('Silent honeypot field is accepted by schemas', () => {
   const withHoneypot = {
     name: 'Bot Name',
-    phone: '+234 803 555 0142',
+    phone: '+234 916 322 2226',
     email: 'bot@example.com',
     message: 'Spam message that is long enough to pass validation.',
     inquiry_type: 'Request info',
@@ -52,7 +52,7 @@ test('Silent honeypot field is accepted by schemas', () => {
 test('Owner listing validates upload limit (max 6 photos)', () => {
   const overLimit = {
     owner_name: 'Landlord Sani',
-    phone: '+234 803 555 0142',
+    phone: '+234 916 322 2226',
     email: 'sani@example.com',
     property_type: 'Warehouse',
     intent: 'Rent',

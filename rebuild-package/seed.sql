@@ -3,7 +3,7 @@
 -- Until a real photo exists the UI shows an on-brand placeholder, never a broken image.
 
 INSERT INTO site_settings (id,business_name,short_name,tagline,rc_number,year_founded,phone,whatsapp,email,address,business_hours,service_lines,footer_copy) VALUES
-(1,'Mai''Lafiya Homes & Properties Ltd.','Mai''Lafiya Homes','Your Profit, Our Priority','RC 7394323',2008,'+234 803 555 0142','2348035550142','info@mailafiyahomes.ng','Plot 14, Bompai Industrial Layout, Kano State, Nigeria','Mon–Fri 8:00 – 18:00 · Sat 9:00 – 14:00','["Real Estate","Property Management","Project Supervisor","Construction","Business Consultant"]'::jsonb,
+(1,'Mai''Lafiya Homes & Properties Ltd.','Mai''Lafiya Homes','Your Profit, Our Priority','RC 7394323',2008,'+234 916 322 2226','2349163222226','info@mailafiyahomes.ng','Plot 14, Bompai Industrial Layout, Kano State, Nigeria','Mon–Fri 8:00 – 18:00 · Sat 9:00 – 14:00','["Real Estate","Property Management","Project Supervisor","Construction","Business Consultant"]'::jsonb,
 'Northern Nigeria''s warehousing specialists since 2008. Every title verified, every property personally walked.');
 
 INSERT INTO metrics (id,years_in_business,properties_transacted,value_of_deals_closed,square_metres_managed,cities_served,client_rating,review_count,response_time_hours,client_retention_pct) VALUES
@@ -22,7 +22,7 @@ INSERT INTO cities (name,slug,state,sort_order) VALUES
 ('Jos','jos','Plateau State',4),('Sokoto','sokoto','Sokoto State',5),('Maiduguri','maiduguri','Borno State',6);
 
 INSERT INTO agents (name,role,photo,phone,whatsapp,email,city_id,show_on_team,sort_order) VALUES
-('Ibrahim Suleiman','Head, Warehousing Division','assets/team-1.jpg','+234 803 555 0142','2348035550142','ibrahim@mailafiyahomes.ng',(SELECT id FROM cities WHERE slug='kano'),true,1),
+('Ibrahim Suleiman','Head, Warehousing Division','assets/team-1.jpg','+234 916 322 2226','2349163222226','ibrahim@mailafiyahomes.ng',(SELECT id FROM cities WHERE slug='kano'),true,1),
 ('Aisha Bello','Senior Property Consultant','assets/team-2.jpg','+234 803 555 0148','2348035550148','aisha@mailafiyahomes.ng',(SELECT id FROM cities WHERE slug='abuja'),true,2),
 ('Yusuf Danladi','Property Consultant, Kaduna','assets/team-3.jpg','+234 803 555 0153','2348035550153','yusuf@mailafiyahomes.ng',(SELECT id FROM cities WHERE slug='kaduna'),true,3);
 

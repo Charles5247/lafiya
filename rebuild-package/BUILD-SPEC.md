@@ -15,7 +15,7 @@ This spec records what was built and verified in the Floot prototype, so it can 
 | Hausa copy | Keep verbatim: Amana, Adalci, Sabuntawa, Al'umma |
 | Prices | Full Naira figures (`₦45,000,000`), never abbreviated, except the freeform `valueOfDealsClosed` text ("₦12B+") |
 | Warehouse | Always the first category and the lead of every category list |
-| Contact | +234 803 555 0142 (phone + WhatsApp `2348035550142`), info@mailafiyahomes.ng, Plot 14 Bompai Industrial Layout, Kano |
+| Contact |+2349163222226 (phone + WhatsApp `2349163222226`), info@mailafiyahomes.ng, Plot 14 Bompai Industrial Layout, Kano |
 | Rate limit | 5 per minute and 20 per hour per IP per form (not the README's "5/hour") |
 
 ## 2. Stack: simple React in plain JavaScript (no payments, no TypeScript)

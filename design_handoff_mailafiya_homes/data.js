@@ -47,7 +47,7 @@ window.MAILAFIYA_DATA = (function () {
       agent: {
         name: "Ibrahim Suleiman",
         role: "Head, Warehousing Division",
-        phone: "+234 803 555 0142",
+        phone: "+234 916 322 2226",
       },
     },
     {
@@ -170,7 +170,7 @@ window.MAILAFIYA_DATA = (function () {
       agent: {
         name: "Ibrahim Suleiman",
         role: "Head, Warehousing Division",
-        phone: "+234 803 555 0142",
+        phone: "+234 916 322 2226",
       },
     },
     {
@@ -320,7 +320,7 @@ window.MAILAFIYA_DATA = (function () {
       agent: {
         name: "Ibrahim Suleiman",
         role: "Head, Warehousing Division",
-        phone: "+234 803 555 0142",
+        phone: "+234 916 322 2226",
       },
     },
     {
@@ -466,7 +466,7 @@ window.MAILAFIYA_DATA = (function () {
       agent: {
         name: "Ibrahim Suleiman",
         role: "Head, Warehousing Division",
-        phone: "+234 803 555 0142",
+        phone: "+234 916 322 2226",
       },
     },
   ];
@@ -589,8 +589,8 @@ window.MAILAFIYA_DATA = (function () {
       "Business Consultant",
     ],
     cities: ["Kano", "Kaduna", "Abuja", "Jos", "Sokoto", "Maiduguri"],
-    phone: "+234 803 555 0142",
-    whatsapp: "+234 803 555 0142",
+    phone: "+234 916 322 2226",
+    whatsapp: "+234 916 322 2226",
     email: "info@mailafiyahomes.ng",
     address: "Plot 14, Bompai Industrial Layout, Kano State, Nigeria",
     hours: "Mon–Fri 8:00 – 18:00 · Sat 9:00 – 14:00",

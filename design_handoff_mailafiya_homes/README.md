@@ -297,7 +297,7 @@ Key mobile transformations:
 - Honeypot field: hidden `<input name="website">` — reject if filled
 
 ### WhatsApp buttons
-- Always use `https://wa.me/2348035550142?text=<url-encoded-message>` deep links
+- Always use `https://wa.me/2349163222226?text=<url-encoded-message>` deep links
 - On property detail: pre-fill message `"Hi, I'm interested in [property title]. Is it still available?"`
 - Floating WhatsApp button: pre-fill `"Hi Mai'Lafiya, I'd like to enquire about a property."`
 

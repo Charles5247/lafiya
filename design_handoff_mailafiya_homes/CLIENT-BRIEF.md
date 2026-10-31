@@ -17,8 +17,8 @@
 | Territory | Northern Nigeria — Kano · Kaduna · Abuja · Jos · Sokoto · Maiduguri |
 | Established | 2008 |
 | Head office | Plot 14, Bompai Industrial Layout, Kano State, Nigeria |
-| Phone | +234 803 555 0142 |
-| WhatsApp | +234 803 555 0142 |
+| Phone |+2349163222226 |
+| WhatsApp |+2349163222226 |
 | Email | info@mailafiyahomes.ng |
 
 ## 2. Tech Stack (required)
@@ -33,7 +33,7 @@
 - **Auth (admin):** Email/password with role-based access
 - **Forms:** Server actions posting to CMS `submissions` collections; also send email via Resend or SendGrid
 - **Analytics:** Google Analytics 4 + Plausible (optional)
-- **WhatsApp:** `https://wa.me/2348035550142?text=...` deep link (no API needed)
+- **WhatsApp:** `https://wa.me/2349163222226?text=...` deep link (no API needed)
 
 ## 3. Approved Design Direction
 

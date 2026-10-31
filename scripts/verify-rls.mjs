@@ -40,9 +40,9 @@ for (const table of ['enquiries', 'property_listings', 'contact_messages', 'rate
 // Use structurally valid payloads so a missing-column or NOT NULL error cannot masquerade as RLS.
 const marker = `rls-probe-${Date.now()}`;
 const attempts = {
-  enquiries: {name:'RLS Probe',phone:'+234 803 555 0142',email:'probe@example.test',inquiry_type:'Request info',message:'Testing that anonymous inserts are denied.',source:'property-detail'},
-  property_listings: {owner_name:'RLS Probe',phone:'+234 803 555 0142',email:'probe@example.test',property_type:'Warehouse',intent:'Rent',city:'Kano',approximate_size:'100 sqm',address:'Test address',notes:'Testing that anonymous inserts are denied.',uploads:[]},
-  contact_messages: {name:'RLS Probe',phone:'+234 803 555 0142',email:'probe@example.test',enquiry_type:'General enquiry',message:'Testing that anonymous inserts are denied.'},
+  enquiries: {name:'RLS Probe',phone:'+234 916 322 2226',email:'probe@example.test',inquiry_type:'Request info',message:'Testing that anonymous inserts are denied.',source:'property-detail'},
+  property_listings: {owner_name:'RLS Probe',phone:'+234 916 322 2226',email:'probe@example.test',property_type:'Warehouse',intent:'Rent',city:'Kano',approximate_size:'100 sqm',address:'Test address',notes:'Testing that anonymous inserts are denied.',uploads:[]},
+  contact_messages: {name:'RLS Probe',phone:'+234 916 322 2226',email:'probe@example.test',enquiry_type:'General enquiry',message:'Testing that anonymous inserts are denied.'},
 };
 const [{data:category},{data:city},{data:agent}] = await Promise.all([
   supabase.from('property_categories').select('id').limit(1).maybeSingle(),
