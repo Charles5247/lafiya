@@ -364,7 +364,7 @@ export default function Admin() {
             Supabase is not configured yet. Please add <code>VITE_SUPABASE_URL</code> and <code>VITE_SUPABASE_ANON_KEY</code> to <code>.env.local</code>.
           </p>
           <div style={{ marginTop: '20px' }}>
-            <a className="v1-btn v1-btn-primary" href="/">Return to Site</a>
+            <a className="v1-btn v1-btn-primary" href={import.meta.env.VITE_SITE_URL || 'https://mailafiya-homes.vercel.app'}>Return to Site</a>
           </div>
         </div>
       </div>

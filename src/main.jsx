@@ -41,9 +41,5 @@ export const createRoot = ViteReactSSG({
       path: '/contact',
       lazy: async () => ({ Component: (await import('./pages/Contact')).Contact }),
     },
-    {
-      path: '/admin/*',
-      lazy: async () => ({ Component: (await import('./pages/Admin')).default }),
-    },
   ],
 });
