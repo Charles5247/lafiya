@@ -47,4 +47,5 @@ ${routes.map((path) => `  <url>
 </urlset>`;
 
 await writeFile('dist/sitemap.xml', sitemapXml);
+await writeFile('dist/robots.txt', `User-agent: *\nAllow: /\nDisallow: /admin\nSitemap: ${origin}/sitemap.xml\n`);
 console.log(`Generated dist/sitemap.xml with ${routes.length} URLs`);
