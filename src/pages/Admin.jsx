@@ -484,72 +484,101 @@ export default function Admin() {
     (!statusFilter || r.status === statusFilter) && JSON.stringify(r).toLowerCase().includes(searchQuery.toLowerCase())
   ).sort((a,b) => sortColumn ? String(a[sortColumn] ?? '').localeCompare(String(b[sortColumn] ?? ''), undefined, {numeric:true}) : 0);
 
+  const tableLabel = (table) => ui.admin.tableLabels[table] || table.replace(/_/g, ' ');
+  const editorColumns = draft
+    ? Object.keys(draft.id ? draft : rows[0] || draft).filter((col) => !READONLY_COLUMNS.has(col))
+    : [];
+  const propertyGroups = currentTable === 'properties' ? ui.admin.propertyGroups.map((group) => ({
+    ...group,
+    columns: group.columns.filter((col) => editorColumns.includes(col)),
+  })).filter((group) => group.columns.length) : [];
+  const groupedColumns = new Set(propertyGroups.flatMap((group) => group.columns));
+  const editorGroups = draft ? [
+    ...propertyGroups,
+    ...((currentTable !== 'properties' || editorColumns.some((col) => !groupedColumns.has(col)))
+      ? [{ label: currentTable === 'properties' ? ui.admin.otherDetails : tableLabel(currentTable), columns: editorColumns.filter((col) => !groupedColumns.has(col)) }]
+      : []),
+  ] : [];
+  const tableColumns = currentTable === 'properties'
+    ? ['title', 'status', 'price', 'area', 'listing']
+    : currentTable === 'property_listings'
+      ? ['owner_name', 'property_type', 'city', 'status', 'submitted_at']
+      : ['name', 'title', 'email', 'subject', 'status', 'created_at', 'submitted_at'].filter((col) => rows[0] && col in rows[0]).slice(0, 5);
+  if (rows[0] && tableColumns.length === 0) tableColumns.push(...Object.keys(rows[0]).filter((col) => col !== 'id').slice(0, 4));
+
+  function displayValue(row, column) {
+    const value = row[column];
+    if (value == null || value === '') return '—';
+    if (column === 'price') return new Intl.NumberFormat('en-NG', { style: 'currency', currency: row.currency || 'NGN', maximumFractionDigits: 0 }).format(Number(value));
+    if (typeof value === 'boolean') return value ? 'Yes' : 'No';
+    if (Array.isArray(value)) return value.join(', ');
+    if (typeof value === 'object') return JSON.stringify(value);
+    return String(value);
+  }
+
+  function selectTable(table) {
+    setCurrentTable(table);
+    setDraft(null);
+    setSearchQuery('');
+    setStatusFilter('');
+    setSortColumn('');
+    setMobileMenuOpen(false);
+  }
+
   return (
     <div className="v1-admin-page">
       <div className="v1-admin-layout">
-        {/* Sidebar */}
-        <aside className={`v1-admin-sidebar ${mobileMenuOpen ? 'is-open' : ''}`}>
-          <h2>{ui.admin.title}</h2>
-
-          <button
-            className={currentTable === 'dashboard' ? 'is-active' : ''}
-            onClick={() => {
-              setCurrentTable('dashboard');
-              setDraft(null);
-              setMobileMenuOpen(false);
-            }}
-          >
-            <span>{ui.admin.dashboard}</span>
-          </button>
-
-          <div style={{ height: '8px' }} />
-
-          <div style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.1em', padding: '8px 12px', color: 'rgba(251,247,241,0.5)' }}>
-            Content Tables
+        {mobileMenuOpen && <button className="v1-admin-backdrop" type="button" onClick={() => setMobileMenuOpen(false)} aria-label={ui.admin.closeMenu} />}
+        <aside id="admin-navigation" className={`v1-admin-sidebar ${mobileMenuOpen ? 'is-open' : ''}`} aria-label={ui.admin.menu}>
+          <div className="v1-admin-brand">
+            <span className="v1-admin-monogram">MH</span>
+            <span><strong>Mai'Lafiya</strong><small>{ui.admin.workspace}</small></span>
+            <button className="v1-admin-close-menu" type="button" onClick={() => setMobileMenuOpen(false)} aria-label={ui.admin.closeMenu}><X size={20} /></button>
           </div>
 
-          {visibleTables.map((tbl) => (
-            <button
-              key={tbl}
-              className={currentTable === tbl ? 'is-active' : ''}
-              onClick={() => {
-                setCurrentTable(tbl);
-                setDraft(null);
-                setSearchQuery('');
-                setMobileMenuOpen(false);
-              }}
-            >
-              <span>{tbl.replace(/_/g, ' ')}</span>
-              {ADMIN_ONLY_TABLES.has(tbl) && (
-                <span style={{ fontSize: '10px', background: 'var(--clay-dk)', padding: '2px 6px', borderRadius: '4px' }}>
-                  admin
-                </span>
-              )}
-            </button>
-          ))}
+          <nav className="v1-admin-nav">
+            {ui.admin.navGroups.map((group) => {
+              const tables = group.tables.filter((table) => table === 'dashboard' || visibleTables.includes(table));
+              return <div className="v1-admin-nav-group" key={group.label}>
+                <div className="v1-admin-nav-heading">{group.label}</div>
+                {tables.map((table) => <button
+                  key={table}
+                  type="button"
+                  className={currentTable === table ? 'is-active' : ''}
+                  onClick={() => selectTable(table)}
+                  aria-current={currentTable === table ? 'page' : undefined}
+                >
+                  <span>{tableLabel(table)}</span>
+                  {table === 'enquiries' && counts.enquiries > 0 && <span className="v1-admin-nav-count">{counts.enquiries}</span>}
+                  {table === 'property_listings' && counts.listings > 0 && <span className="v1-admin-nav-count">{counts.listings}</span>}
+                  {table === 'contact_messages' && counts.messages > 0 && <span className="v1-admin-nav-count">{counts.messages}</span>}
+                </button>)}
+              </div>;
+            })}
+          </nav>
 
-          <div style={{ marginTop: 'auto', paddingTop: '20px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-            <div style={{ fontSize: '12px', color: 'rgba(251,247,241,0.7)', padding: '0 12px 10px' }}>
-              Logged in as: <br />
-              <strong>{session.user.email}</strong> ({profile.role})
-            </div>
-            <button onClick={() => supabase.auth.signOut()}>
-              <span>{ui.admin.signOut}</span> <LogOut size={16} />
-            </button>
+          <div className="v1-admin-account">
+            <span className="v1-admin-avatar">{(session.user.email || 'S')[0].toUpperCase()}</span>
+            <span className="v1-admin-account-name"><strong>{session.user.email}</strong><small>{profile.role}</small></span>
+            <button type="button" onClick={() => supabase.auth.signOut()} aria-label={ui.admin.signOut}><LogOut size={18} /></button>
           </div>
         </aside>
 
         {/* Content Area */}
         <main className="v1-admin-content">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-            <h1 style={{ fontSize: '28px', margin: 0, textTransform: 'capitalize' }}>
-              {currentTable.replace(/_/g, ' ')}
-            </h1>
+          <div className="v1-admin-page-head">
+            <div>
+              <span className="v1-admin-kicker">{ui.admin.workspace}</span>
+              <h1>{tableLabel(currentTable)}</h1>
+              <p>{ui.admin.pageHelp}</p>
+            </div>
             <button
-              className="v1-btn v1-btn-sm v1-btn-outline v1-menu-toggle"
+              className="v1-btn v1-btn-sm v1-btn-outline v1-admin-menu-toggle"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-controls="admin-navigation"
+              aria-expanded={mobileMenuOpen}
             >
-              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />} Tables
+              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />} {ui.admin.menu}
             </button>
           </div>
 
@@ -617,17 +646,18 @@ export default function Admin() {
               <div className="v1-admin-tools">
                 <input
                   type="text"
-                  placeholder="Search records in this table…"
+                  placeholder={ui.admin.searchRecords}
+                  aria-label={ui.admin.searchRecords}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
                 {adminTemplates[currentTable] && <button className="v1-btn v1-btn-primary" onClick={() => setDraft({...adminTemplates[currentTable]})}>
-                  + New Record
+                  + {ui.admin.create}
                 </button>}
-                {['enquiries', 'property_listings', 'contact_messages', 'properties'].includes(currentTable) && <select aria-label="Filter by status" value={statusFilter} onChange={e => setStatusFilter(e.target.value)}><option value="">All statuses</option>{[...new Set(rows.map(r => r.status).filter(Boolean))].map(s => <option key={s}>{s}</option>)}</select>}
-                <select aria-label="Sort records" value={sortColumn} onChange={e => setSortColumn(e.target.value)}><option value="">Default order</option>{Object.keys(rows[0] || adminTemplates[currentTable] || {}).map(k => <option key={k} value={k}>{k.replace(/_/g,' ')}</option>)}</select>
+                {['enquiries', 'property_listings', 'contact_messages', 'properties'].includes(currentTable) && <select aria-label="Filter by status" value={statusFilter} onChange={e => setStatusFilter(e.target.value)}><option value="">{ui.admin.allStatuses}</option>{[...new Set(rows.map(r => r.status).filter(Boolean))].map(s => <option key={s}>{s}</option>)}</select>}
+                <select aria-label="Sort records" value={sortColumn} onChange={e => setSortColumn(e.target.value)}><option value="">{ui.admin.defaultOrder}</option>{Object.keys(rows[0] || adminTemplates[currentTable] || {}).map(k => <option key={k} value={k}>{k.replace(/_/g,' ')}</option>)}</select>
                 <button className="v1-btn v1-btn-outline" onClick={handleExportCsv}>
-                  Export CSV
+                  {ui.admin.export}
                 </button>
               </div>
 
@@ -659,30 +689,37 @@ export default function Admin() {
               {/* Edit / Create Form */}
               {draft && (
                 <form className="v1-admin-editor" onSubmit={handleSaveRecord}>
-                  <div style={{ gridColumn: '1 / -1', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '12px' }}>
-                    <h3 style={{ margin: 0 }}>
-                      {draft.id ? `Edit Record #${draft.id}` : 'Create New Record'}
-                    </h3>
+                  <div className="v1-admin-editor-head">
+                    <div><span className="v1-admin-kicker">{tableLabel(currentTable)}</span><h2>
+                      {draft.id ? (draft.title || draft.name || `Edit ${tableLabel(currentTable)}`) : `New ${tableLabel(currentTable)}`}
+                    </h2></div>
                     <button type="button" className="v1-btn v1-btn-sm v1-btn-outline" onClick={() => setDraft(null)}>
-                      Close Editor
+                      {ui.admin.closeEditor}
                     </button>
                   </div>
 
-                  {Object.keys(draft.id ? draft : rows[0] || { title: '', name: '' })
-                    .filter((col) => !READONLY_COLUMNS.has(col))
-                    .map((col) => (
-                      <div key={col}>
-                        <label>{col.replace(/_/g, ' ')}</label>
-                        {typeof draft[col] === 'boolean' ? (
+                  {editorGroups.map((group) => <fieldset className="v1-admin-fieldset" key={group.label}>
+                    <legend>{group.label}</legend>
+                    <div className="v1-admin-field-grid">
+                    {group.columns.map((col) => (
+                      <div className={`v1-admin-field ${['description', 'features', 'gallery', 'process_steps', 'notes', 'story_body'].includes(col) ? 'is-wide' : ''}`} key={col}>
+                        <label htmlFor={`admin-${col}`}>{ui.admin.fieldLabels[col] || col.replace(/_/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase())}</label>
+                        {currentTable === 'properties' && ['status', 'listing', 'sub_category'].includes(col) ? (
+                          <select id={`admin-${col}`} value={draft[col] ?? ''} onChange={(e) => setDraft({ ...draft, [col]: e.target.value })}>
+                            {(col === 'status' ? ui.admin.propertyStatuses : col === 'listing' ? ui.admin.listingKinds : ui.admin.subCategories).map((option) => <option key={option} value={option}>{option}</option>)}
+                          </select>
+                        ) : typeof draft[col] === 'boolean' ? (
                           <select
+                            id={`admin-${col}`}
                             value={String(draft[col])}
                             onChange={(e) => setDraft({ ...draft, [col]: e.target.value === 'true' })}
                           >
-                            <option value="true">true</option>
-                            <option value="false">false</option>
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
                           </select>
                         ) : JSON_COLUMNS.has(col) || String(draft[col] ?? '').length > 80 ? (
                           <textarea
+                            id={`admin-${col}`}
                             value={
                               typeof draft[col] === 'object'
                                 ? JSON.stringify(draft[col], null, 2)
@@ -691,12 +728,13 @@ export default function Admin() {
                             onChange={(e) => setDraft({ ...draft, [col]: e.target.value })}
                           />
                         ) : ['category_id', 'city_id', 'agent_id', 'property_id', 'assigned_to'].includes(col) ? (
-                          <select value={draft[col] ?? ''} onChange={e => setDraft({...draft, [col]: e.target.value || null})}>
+                          <select id={`admin-${col}`} value={draft[col] ?? ''} onChange={e => setDraft({...draft, [col]: e.target.value || null})}>
                             <option value="">Select…</option>
                             {(relations[{category_id:'property_categories',city_id:'cities',agent_id:'agents',property_id:'properties',assigned_to:'profiles'}[col]] || []).map(option => <option key={option.id} value={option.id}>{option.name || option.display_name || option.title || option.email}</option>)}
                           </select>
                         ) : col === 'role' && currentTable === 'profiles' ? (
                           <select
+                            id={`admin-${col}`}
                             value={draft[col] || 'user'}
                             onChange={(e) => setDraft({ ...draft, [col]: e.target.value })}
                             disabled={draft.id === session.user.id}
@@ -707,20 +745,24 @@ export default function Admin() {
                           </select>
                         ) : (
                           <input
-                            type="text"
+                            id={`admin-${col}`}
+                            type={['price', 'size_sqm', 'bedrooms', 'bathrooms', 'dock_doors', 'floors', 'year_built', 'latitude', 'longitude', 'sort_order'].includes(col) ? 'number' : 'text'}
+                            step={['latitude', 'longitude', 'size_sqm'].includes(col) ? 'any' : undefined}
                             value={draft[col] ?? ''}
                             onChange={(e) => setDraft({ ...draft, [col]: e.target.value })}
                           />
                         )}
                       </div>
                     ))}
+                    </div>
+                  </fieldset>)}
 
-                  <div style={{ gridColumn: '1 / -1', display: 'flex', gap: '12px', marginTop: '12px' }}>
+                  <div className="v1-admin-editor-actions">
                     <button type="submit" className="v1-btn v1-btn-primary">
                       {ui.admin.save}
                     </button>
                     <button type="button" className="v1-btn v1-btn-outline" onClick={() => setDraft(null)}>
-                      Cancel
+                      {ui.admin.cancel}
                     </button>
                   </div>
                 </form>
@@ -731,8 +773,8 @@ export default function Admin() {
                 <table className="v1-admin-table">
                   <thead>
                     <tr>
-                      {Object.keys(filteredRows[0] || {}).slice(0, 7).map((col) => (
-                        <th key={col}>{col.replace(/_/g, ' ')}</th>
+                      {tableColumns.map((col) => (
+                        <th key={col}>{ui.admin.fieldLabels[col] || col.replace(/_/g, ' ')}</th>
                       ))}
                       <th>Actions</th>
                     </tr>
@@ -740,15 +782,13 @@ export default function Admin() {
                   <tbody>
                     {filteredRows.map((r) => (
                       <tr key={r.id}>
-                        {Object.keys(r).slice(0, 7).map((col) => (
-                          <td key={col}>
-                            {typeof r[col] === 'object'
-                              ? JSON.stringify(r[col])
-                              : String(r[col] ?? '')}
+                        {tableColumns.map((col) => (
+                          <td key={col} data-label={ui.admin.fieldLabels[col] || col.replace(/_/g, ' ')}>
+                            {col === 'status' ? <span className={`v1-admin-status ${String(r[col] || '').toLowerCase().replace(/\s+/g, '-')}`}>{displayValue(r, col)}</span> : displayValue(r, col)}
                           </td>
                         ))}
-                        <td>
-                          <div style={{ display: 'flex', gap: '6px' }}>
+                        <td data-label="Actions">
+                          <div className="v1-admin-row-actions">
                             <button
                               className="v1-btn v1-btn-sm v1-btn-outline"
                               onClick={() => setDraft(r)}
@@ -781,8 +821,8 @@ export default function Admin() {
                     ))}
                     {filteredRows.length === 0 && (
                       <tr>
-                        <td colSpan={8} style={{ textAlign: 'center', padding: '30px' }}>
-                          No records found.
+                        <td colSpan={tableColumns.length + 1} style={{ textAlign: 'center', padding: '30px' }}>
+                          {ui.admin.noRecords}
                         </td>
                       </tr>
                     )}
