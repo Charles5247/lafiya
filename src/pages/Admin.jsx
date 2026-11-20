@@ -486,7 +486,7 @@ export default function Admin() {
 
   const tableLabel = (table) => ui.admin.tableLabels[table] || table.replace(/_/g, ' ');
   const editorColumns = draft
-    ? Object.keys(draft.id ? draft : rows[0] || draft).filter((col) => !READONLY_COLUMNS.has(col))
+    ? Object.keys(draft).filter((col) => !READONLY_COLUMNS.has(col))
     : [];
   const propertyGroups = currentTable === 'properties' ? ui.admin.propertyGroups.map((group) => ({
     ...group,
