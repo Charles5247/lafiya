@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase';
 import { ui } from '../strings';
 import { csvCell, jsonValue } from '../lib/admin-data';
 import { adminTemplates } from '../lib/admin-templates';
+import { Image } from '../lib/media';
 import {
   Menu,
   X,
@@ -76,6 +77,9 @@ export default function Admin() {
   const [mediaFile, setMediaFile] = useState(null);
   const [mediaAlt, setMediaAlt] = useState('');
   const [mediaUploading, setMediaUploading] = useState(false);
+  const [propertyImageFile, setPropertyImageFile] = useState(null);
+  const [propertyImageAlt, setPropertyImageAlt] = useState('');
+  const [propertyImageUploading, setPropertyImageUploading] = useState(false);
 
   // Supabase Auth listener
   useEffect(() => {
@@ -235,6 +239,9 @@ export default function Admin() {
           .replace(/[^a-z0-9]+/g, '-')
           .replace(/^-|-$/g, '');
       }
+      if (currentTable === 'properties' && payload.main_image) {
+        payload.gallery = [...new Set([payload.main_image, ...(payload.gallery || [])])];
+      }
 
       let res;
       if (draft.id) {
@@ -331,6 +338,44 @@ export default function Admin() {
       setErrorMsg(err.message);
     } finally {
       setMediaUploading(false);
+    }
+  }
+
+  async function handlePropertyImageUpload(e) {
+    const fileInput = e.currentTarget.closest('.v1-admin-image-upload').querySelector('input[type="file"]');
+    if (!propertyImageFile || !draft || currentTable !== 'properties') return;
+    const allowedTypes = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'image/avif': 'avif' };
+    if (!allowedTypes[propertyImageFile.type] || propertyImageFile.size > 5 * 1024 * 1024) {
+      setErrorMsg(ui.admin.propertyImageInvalid);
+      return;
+    }
+    if (!propertyImageAlt.trim()) {
+      setErrorMsg(ui.admin.propertyImageAltRequired);
+      return;
+    }
+    setPropertyImageUploading(true);
+    setErrorMsg('');
+    const extension = allowedTypes[propertyImageFile.type];
+    const path = `properties/${draft.id || 'drafts'}/${crypto.randomUUID()}.${extension}`;
+    try {
+      const { error: uploadError } = await supabase.storage.from('site-media').upload(path, propertyImageFile, { contentType: propertyImageFile.type });
+      if (uploadError) throw uploadError;
+      const { data } = supabase.storage.from('site-media').getPublicUrl(path);
+      const { error: mediaError } = await supabase.from('media').insert({ url: data.publicUrl, alt_text: propertyImageAlt.trim(), filename: propertyImageFile.name });
+      if (mediaError) {
+        await supabase.storage.from('site-media').remove([path]);
+        throw mediaError;
+      }
+      const gallery = Array.isArray(draft.gallery) ? draft.gallery : jsonValue(draft.gallery || '[]');
+      setDraft({ ...draft, main_image: draft.main_image || data.publicUrl, gallery: [...new Set([draft.main_image, ...gallery, data.publicUrl].filter(Boolean))] });
+      setPropertyImageFile(null);
+      setPropertyImageAlt('');
+      fileInput.value = '';
+      setInfoMsg(ui.admin.propertyImageAdded);
+    } catch (error) {
+      setErrorMsg(error.message);
+    } finally {
+      setPropertyImageUploading(false);
     }
   }
 
@@ -486,7 +531,13 @@ export default function Admin() {
 
   const tableLabel = (table) => ui.admin.tableLabels[table] || table.replace(/_/g, ' ');
   const editorColumns = draft
-    ? Object.keys(draft).filter((col) => !READONLY_COLUMNS.has(col))
+    ? Object.keys(draft).filter((col) => !READONLY_COLUMNS.has(col) && (currentTable !== 'properties' || !['main_image', 'gallery'].includes(col)))
+    : [];
+  const propertyGallery = currentTable === 'properties' && draft
+    ? (Array.isArray(draft.gallery) ? draft.gallery : jsonValue(draft.gallery || '[]'))
+    : [];
+  const propertyImages = draft && currentTable === 'properties'
+    ? [...new Set([draft.main_image, ...propertyGallery].filter(Boolean))]
     : [];
   const propertyGroups = currentTable === 'properties' ? ui.admin.propertyGroups.map((group) => ({
     ...group,
@@ -697,6 +748,28 @@ export default function Admin() {
                       {ui.admin.closeEditor}
                     </button>
                   </div>
+
+                  {currentTable === 'properties' && <fieldset className="v1-admin-fieldset v1-admin-images">
+                    <legend>{ui.admin.propertyImages}</legend>
+                    <p>{ui.admin.propertyImagesHelp}</p>
+                    <div className="v1-admin-image-grid">
+                      {propertyImages.map((url, index) => <div className="v1-admin-image-card" key={`${url}-${index}`}>
+                        <Image src={url} alt={`${draft.title || ui.admin.propertyImages} ${index + 1}`} />
+                        <div className="v1-admin-image-card-actions">
+                          {draft.main_image === url ? <strong>{ui.admin.mainPhoto}</strong> : <button type="button" onClick={() => setDraft({ ...draft, main_image: url, gallery: [url, ...propertyImages.filter((image) => image !== url)] })}>{ui.admin.setMainPhoto}</button>}
+                          <button type="button" onClick={() => {
+                            const next = propertyImages.filter((_, itemIndex) => itemIndex !== index);
+                            setDraft({ ...draft, gallery: next, main_image: draft.main_image === url ? (next[0] || '') : draft.main_image });
+                          }}>{ui.admin.removePhoto}</button>
+                        </div>
+                      </div>)}
+                    </div>
+                    <div className="v1-admin-image-upload">
+                      <label>{ui.admin.choosePropertyImage}<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" onChange={(e) => setPropertyImageFile(e.target.files?.[0] || null)} /></label>
+                      <label>{ui.admin.imageAltText}<input type="text" value={propertyImageAlt} onChange={(e) => setPropertyImageAlt(e.target.value)} placeholder={ui.admin.imageAltExample} /></label>
+                      <button type="button" className="v1-btn v1-btn-outline" onClick={handlePropertyImageUpload} disabled={propertyImageUploading || !propertyImageFile}>{propertyImageUploading ? ui.admin.uploadingImage : ui.admin.addPhoto}</button>
+                    </div>
+                  </fieldset>}
 
                   {editorGroups.map((group) => <fieldset className="v1-admin-fieldset" key={group.label}>
                     <legend>{group.label}</legend>

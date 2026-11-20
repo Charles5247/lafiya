@@ -35,6 +35,17 @@
 .v1-admin-editor-head h2 { margin: 4px 0 0; color: #16213d; font-family: Fraunces, serif; font-size: clamp(21px, 2vw, 27px); line-height: 1.2; }
 .v1-admin-fieldset { min-width: 0; margin: 0; padding: 21px 25px 23px; border: 0; border-bottom: 1px solid #ece9e2; }
 .v1-admin-fieldset legend { float: left; width: 100%; margin-bottom: 16px; color: #17284c; font-size: 15px; font-weight: 700; }
+.v1-admin-images > p { clear: both; margin: 0 0 16px; color: #677185; font-size: 13px; }
+.v1-admin-image-grid { clear: both; display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; margin-bottom: 18px; }
+.v1-admin-image-card { min-width: 0; overflow: hidden; border: 1px solid #e2e4e3; border-radius: 10px; background: #fff; }
+.v1-admin-image-card > :first-child { width: 100%; height: 120px; object-fit: cover; }
+.v1-admin-image-card-actions { display: flex; align-items: center; justify-content: space-between; gap: 6px; min-height: 42px; padding: 6px 9px; font-size: 11px; }
+.v1-admin-image-card-actions strong { color: #2446b4; }
+.v1-admin-image-card-actions button { border: 0; background: none; color: #2446b4; font: inherit; cursor: pointer; }
+.v1-admin-image-upload { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; }
+.v1-admin-image-upload label { display: grid; flex: 1 1 200px; gap: 6px; color: #5b6578; font-size: 11px; font-weight: 700; }
+.v1-admin-image-upload input { width: 100%; min-height: 44px; padding: 9px; border: 1px solid #dce0dc; border-radius: 8px; background: #fff; font-size: 16px; }
+.v1-admin-image-upload .v1-btn { min-height: 44px; }
 .v1-admin-field-grid { clear: both; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 17px 20px; }
 .v1-admin-field { min-width: 0; }
 .v1-admin-field.is-wide { grid-column: 1 / -1; }
