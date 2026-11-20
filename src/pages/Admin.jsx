@@ -4,6 +4,7 @@ import { ui } from '../strings';
 import { csvCell, jsonValue } from '../lib/admin-data';
 import { adminTemplates } from '../lib/admin-templates';
 import { Image } from '../lib/media';
+import { optimizePropertyImage } from '../lib/optimize-image';
 import {
   Menu,
   X,
@@ -345,7 +346,7 @@ export default function Admin() {
     const fileInput = e.currentTarget.closest('.v1-admin-image-upload').querySelector('input[type="file"]');
     if (!propertyImageFile || !draft || currentTable !== 'properties') return;
     const allowedTypes = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'image/avif': 'avif' };
-    if (!allowedTypes[propertyImageFile.type] || propertyImageFile.size > 5 * 1024 * 1024) {
+    if (!allowedTypes[propertyImageFile.type] || propertyImageFile.size > 15 * 1024 * 1024) {
       setErrorMsg(ui.admin.propertyImageInvalid);
       return;
     }
@@ -355,10 +356,10 @@ export default function Admin() {
     }
     setPropertyImageUploading(true);
     setErrorMsg('');
-    const extension = allowedTypes[propertyImageFile.type];
-    const path = `properties/${draft.id || 'drafts'}/${crypto.randomUUID()}.${extension}`;
     try {
-      const { error: uploadError } = await supabase.storage.from('site-media').upload(path, propertyImageFile, { contentType: propertyImageFile.type });
+      const optimized = await optimizePropertyImage(propertyImageFile);
+      const path = `properties/${draft.id || 'drafts'}/${crypto.randomUUID()}.${optimized.extension}`;
+      const { error: uploadError } = await supabase.storage.from('site-media').upload(path, optimized.file, { contentType: optimized.file.type });
       if (uploadError) throw uploadError;
       const { data } = supabase.storage.from('site-media').getPublicUrl(path);
       const { error: mediaError } = await supabase.from('media').insert({ url: data.publicUrl, alt_text: propertyImageAlt.trim(), filename: propertyImageFile.name });

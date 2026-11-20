@@ -194,7 +194,7 @@ export function PropertyDetail() {
             tabIndex={0}
             aria-label="View enlarged image"
           >
-            <Image src={photos[activePhotoIdx]} alt={property.title} />
+            <Image src={photos[activePhotoIdx]} alt={property.title} loading="eager" fetchpriority="high" />
             <span className="v1-pcard-listing v1-detail-listing">{property.listing}</span>
             {property.video_tour_url && (
               <button

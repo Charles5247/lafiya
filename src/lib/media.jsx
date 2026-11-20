@@ -9,16 +9,16 @@ export function resolveImage(value) {
 
 export function Image({ src, alt = '', className = '', ...props }) {
   const resolved = resolveImage(src);
-  const [failed, setFailed] = useState(false);
+  const [failedSrc, setFailedSrc] = useState(null);
 
-  if (resolved && !failed) {
+  if (resolved && resolved !== failedSrc) {
     return (
       <img
         src={resolved}
         alt={alt}
         className={className}
         loading="lazy"
-        onError={() => setFailed(true)}
+        onError={() => setFailedSrc(resolved)}
         {...props}
       />
     );
